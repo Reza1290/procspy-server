@@ -3,4 +3,4 @@ export class InvalidAuthTokenError extends Error {
     super('Invalid authentication token')
     this.name = 'InvalidAuthTokenError'
   }
-}
+}2
