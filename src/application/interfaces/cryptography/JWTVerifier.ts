@@ -1,3 +1,3 @@
 export interface JWTVerifier {
-    verify(jwt: string): Promise<string | null>
+    verify(token: string): Promise<string | null>
 }
