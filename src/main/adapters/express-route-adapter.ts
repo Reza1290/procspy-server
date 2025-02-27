@@ -11,7 +11,9 @@ export const expressRouteAdapter = (
         headers: req.headers,
         userId: req.userId
     }
-
+    // return res.status(200).json({
+    //     error: httpRequest
+    // })
     const httpResponse = await controller.handle(httpRequest)
 
     if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
