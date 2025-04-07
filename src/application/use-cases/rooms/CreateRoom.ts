@@ -1,7 +1,7 @@
 
 import { RoomAlreadyExistError } from "@application/errors/RoomAlreadyExistError";
 import { CreateRoomRepository } from "@application/interfaces/repositories/rooms/CreateRoomRepository";
-import { GetRoomByRoomIdRepository } from "@application/interfaces/repositories/rooms/GetRoomByIdRepository";
+import { GetRoomByRoomIdRepository } from "@application/interfaces/repositories/rooms/GetRoomByRoomIdRepository";
 import { CreateRoomInterface } from "@application/interfaces/use-cases/rooms/CreateRoomInterface";
 
 

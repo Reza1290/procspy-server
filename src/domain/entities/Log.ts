@@ -3,7 +3,7 @@ export type LogProps = {
     sessionId: string
     message: string
     timestamp: string
-    flagKey: string
+    flagKey?: string
 }
 
 export class Log {
@@ -15,8 +15,8 @@ export class Log {
 
     public readonly timestamp: string
 
-    public readonly flagKey: string
-    
+    public readonly flagKey?: string
+
     constructor(props: LogProps){
         this.id = props.id
         this.sessionId = props.sessionId

@@ -1,7 +1,7 @@
 import { Collection } from "mongodb";
 import dbConnection from "../helpers/db-connection";
 import { mapCollection, mapDocument, objectIdToString } from "../helpers/mapper";
-import { GetRoomByRoomIdRepository } from "@application/interfaces/repositories/rooms/GetRoomByIdRepository";
+import { GetRoomByRoomIdRepository } from "@application/interfaces/repositories/rooms/GetRoomByRoomIdRepository";
 import { CreateRoomRepository } from "@application/interfaces/repositories/rooms/CreateRoomRepository";
 import { GetRoomsRepository } from "@application/interfaces/repositories/rooms/GetRoomsRepository";
 
