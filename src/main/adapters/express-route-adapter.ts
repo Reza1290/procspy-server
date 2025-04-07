@@ -17,6 +17,13 @@ export const expressRouteAdapter = (
     const httpResponse = await controller.handle(httpRequest)
 
     if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
+        if(httpResponse.statusCode == 200 && httpResponse.body?.authenticationToken){
+            res.cookie('access_token', httpResponse.body?.authenticationToken,{
+                httpOnly: true,
+                secure: true,
+                sameSite: "strict"
+            })
+        }
         res.status(httpResponse.statusCode).json(httpResponse.body)
     } else {
         res.status(httpResponse.statusCode).json({

@@ -11,15 +11,15 @@ import { RoomAlreadyExistError } from "@application/errors/RoomAlreadyExistError
 export class CreateRoomController extends BaseController {
 
     constructor(
-        private readonly CreateRoomValidation: Validation,
-        private readonly CreateRoom: CreateRoomInterface
+        private readonly createRoomValidation: Validation,
+        private readonly createRoom: CreateRoomInterface
     ) {
-        super(CreateRoomValidation)
+        super(createRoomValidation)
     }
 
     async execute(httpRequest: CreateRoomController.Request): Promise<CreateRoomController.Response> {
         const { roomId} = httpRequest.body!
-        const idOrError = await this.CreateRoom.execute({ roomId })
+        const idOrError = await this.createRoom.execute({ roomId })
         if (idOrError instanceof RoomAlreadyExistError) {
             return unauthorized(idOrError)
         } else {

@@ -9,6 +9,6 @@ export interface SignUpInterface extends UseCase<SignUpInterface.Request, SignUp
 
 
 export namespace SignUpInterface{
-    export type Request = Omit<User, 'id' | 'createdAt' | 'updatedAt'>
+    export type Request = Omit<User, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>
     export type Response = string | EmailInUseError
 }

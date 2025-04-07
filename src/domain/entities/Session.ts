@@ -1,14 +1,14 @@
 export enum SessionStatus {
     Ongoing,
     Completed,
-    Flagged
+    Paused
 }
 
 export type SessionProps = {
     id: string
     roomId: string
     userId: string
-    userProctoredId?: string
+    proctoredUserId?: string
     startTime?: string
     endTime?: string
     status?: SessionStatus
@@ -17,8 +17,7 @@ export type SessionProps = {
 export class Session {
     public readonly id: string;
     public readonly roomId: string;
-    public readonly userId: string;
-    public readonly userProctoredId?: string;
+    public readonly proctoredUserId?: string;
     public readonly startTime?: string;
     public readonly endTime?: string;
     public readonly status?: SessionStatus;
@@ -26,8 +25,7 @@ export class Session {
     constructor(props: SessionProps) {
         this.id = props.id;
         this.roomId = props.roomId;
-        this.userId = props.userId;
-        this.userProctoredId = props.userProctoredId;
+        this.proctoredUserId = props.proctoredUserId;
         this.startTime = props.startTime;
         this.endTime = props.endTime;
         this.status = props.status;
