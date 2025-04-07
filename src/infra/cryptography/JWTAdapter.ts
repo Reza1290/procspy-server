@@ -8,7 +8,7 @@ export class JWTAdapter implements JWTGenerator, JWTVerifier {
     constructor(private readonly secret: string) {}
 
     async generate(payload: string): Promise<string> {
-        return jwt.sign(payload, this.secret)
+        return jwt.sign({payload}, this.secret, {'expiresIn': '1d'})
     }
 
     async verify(token: string): Promise<string | null> {
