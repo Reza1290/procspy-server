@@ -1,5 +1,6 @@
 import { Flag } from "@domain/entities/Flag"
 import { UseCase } from "../UseCase"
+import { FlagAlreadyExistError } from "@application/errors/FlagAlreadyExistError"
 
 
 export interface CreateFlagInterface extends UseCase<CreateFlagInterface.Request, CreateFlagInterface.Response>{
@@ -10,5 +11,5 @@ export interface CreateFlagInterface extends UseCase<CreateFlagInterface.Request
 
 export namespace CreateFlagInterface{
     export type Request = Omit<Flag, 'id' >
-    export type Response = string | Error
+    export type Response = string | FlagAlreadyExistError
 }
