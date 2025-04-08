@@ -27,7 +27,7 @@ export class AuthMiddleware extends BaseMiddleware {
         const [, authToken] = authHeader.split(' ')
         const userIdOrError = await this.authenticate.execute(authToken)
         if (userIdOrError instanceof ForbiddenError) {
-            return forbidden(new InvalidAuthTokenError())
+            return forbidden(new InvalidAuthTokenError(authToken))
 
         }
 

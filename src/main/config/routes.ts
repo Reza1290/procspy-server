@@ -1,5 +1,6 @@
 import authenticationRoutes from "@main/routes/authentication-routes"
 import flagsRoutes from "@main/routes/flags-routes"
+import globalSettingsRoutes from "@main/routes/global-settings-routes"
 import logsRoutes from "@main/routes/logs-routes"
 import proctoredUsersRoutes from "@main/routes/proctored-users-routes"
 import roomsRoutes from "@main/routes/rooms-routes"
@@ -17,4 +18,5 @@ export default (app: Express): void => {
     logsRoutes(router)
     flagsRoutes(router)
     proctoredUsersRoutes(router)
+    globalSettingsRoutes(router)
 }
