@@ -1,4 +1,5 @@
 import authenticationRoutes from "@main/routes/authentication-routes"
+import flagsRoutes from "@main/routes/flags-routes"
 import logsRoutes from "@main/routes/logs-routes"
 import roomsRoutes from "@main/routes/rooms-routes"
 import sessionsRoutes from "@main/routes/sessions-routes"
@@ -13,4 +14,5 @@ export default (app: Express): void => {
     roomsRoutes(router)
     sessionsRoutes(router)
     logsRoutes(router)
+    flagsRoutes(router)
 }

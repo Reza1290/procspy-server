@@ -34,7 +34,7 @@
 
 export type FlagProps = {
     id: string
-    key: string
+    flagKey: string
     label: string
     severity: number
 
@@ -43,13 +43,13 @@ export type FlagProps = {
 export class Flag {
     public readonly id: string
     public readonly label: string
-    public readonly key: string
+    public readonly flagKey: string
     public readonly severity: number
 
     constructor(props: FlagProps){
         this.id = props.id
         this.label = props.label
-        this.key = props.key
+        this.flagKey = props.flagKey
         this.severity = props.severity
     }
 }

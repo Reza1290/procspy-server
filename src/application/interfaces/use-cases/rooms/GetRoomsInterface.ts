@@ -1,7 +1,5 @@
 import { Room } from "@domain/entities/Room";
 import { UseCase } from "../UseCase";
-import { RoomAlreadyExistError } from "@application/errors/RoomAlreadyExistError";
-import { EntityNotFoundError } from "@application/errors/EntityNotFoundError";
 
 
 export interface GetRoomsInterface extends UseCase<GetRoomsInterface.Request, GetRoomsInterface.Response>{
