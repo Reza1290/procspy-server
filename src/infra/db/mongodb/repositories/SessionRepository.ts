@@ -1,14 +1,16 @@
 import { CreateSessionRepository } from "@application/interfaces/repositories/sessions/CreateSessionRepository"
 import dbConnection from "../helpers/db-connection"
 import { Collection, Timestamp } from "mongodb"
-import { mapDocument, objectIdToString } from "../helpers/mapper"
+import { mapDocument, objectIdToString,stringToObjectId } from "../helpers/mapper"
 import { GetSessionByProctoredUserIdRepository } from "@application/interfaces/repositories/sessions/GetSessionByProctoredUserIdRepository"
+import { GetSessionByIdRepository } from "@application/interfaces/repositories/sessions/GetSessionByIdRepository"
 
 
 
 export class SessionRepository implements
     CreateSessionRepository,
-    GetSessionByProctoredUserIdRepository
+    GetSessionByProctoredUserIdRepository,
+    GetSessionByIdRepository
     {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('sessions')
@@ -27,6 +29,12 @@ export class SessionRepository implements
         return rawSession && mapDocument(rawSession)
     }
     
+    async getSessionById(id: GetSessionByIdRepository.Request): Promise<GetSessionByIdRepository.Response> {
+        const collection = await SessionRepository.getCollection()
+        const _id = stringToObjectId(id)
+        const rawSession = await collection.findOne({_id})
+        return rawSession && mapDocument(rawSession)
+    }
 
     // async getSessions(params: GetSessionsRepository.Request): Promise<GetSessionsRepository.Response> {
     //     const collection = await SessionRepository.getCollection()
