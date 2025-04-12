@@ -7,6 +7,7 @@ export const expressMiddlewareAdapter = (
 ) => async (req: Request, res: Response, next: NextFunction) => {
     const httpRequest: HttpRequest = {
         body: req.body,
+        query: req.query,
         params: req.params,
         headers: req.headers
     }

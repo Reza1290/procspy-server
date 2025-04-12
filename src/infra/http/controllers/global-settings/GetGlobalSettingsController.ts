@@ -17,7 +17,8 @@ export class GetGlobalSettingsController extends BaseController {
     }
 
     async execute(httpRequest: GetGlobalSettingsController.Request): Promise<GetGlobalSettingsController.Response> {
-        const { page } = httpRequest.body!
+        console.log(httpRequest)
+        const { page } = httpRequest.params!
         const response = await this.getGlobalSettings.execute({ page })
         return ok(response)
 
@@ -26,6 +27,6 @@ export class GetGlobalSettingsController extends BaseController {
 }
 
 export namespace GetGlobalSettingsController {
-    export type Request = HttpRequest<GetGlobalSettingsInterface.Request>
+    export type Request = HttpRequest<undefined, { page?: number }>
     export type Response = HttpResponse<GetGlobalSettingsInterface.Response>
 }

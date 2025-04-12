@@ -11,14 +11,15 @@ import { RoomAlreadyExistError } from "@application/errors/RoomAlreadyExistError
 export class GetProctoredUsersController extends BaseController {
 
     constructor(
-        private readonly getProctoredUsersValidation: Validation,
+        // private readonly getProctoredUsersValidation: Validation,
         private readonly getProctoredUsers: GetProctoredUsersInterface
     ) {
-        super(getProctoredUsersValidation)
+        super()
     }
 
     async execute(httpRequest: GetProctoredUsersController.Request): Promise<GetProctoredUsersController.Response> {
-        const { page } = httpRequest.body!
+        const { page } = httpRequest.query!
+        console.log(page)
         const response = await this.getProctoredUsers.execute({ page })
         return ok(response)
 
@@ -27,6 +28,6 @@ export class GetProctoredUsersController extends BaseController {
 }
 
 export namespace GetProctoredUsersController {
-    export type Request = HttpRequest<GetProctoredUsersInterface.Request>
+    export type Request = HttpRequest<undefined, { page?: number }>;
     export type Response = HttpResponse<GetProctoredUsersInterface.Response>
 }

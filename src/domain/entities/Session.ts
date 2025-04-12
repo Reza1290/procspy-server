@@ -1,4 +1,5 @@
 export enum SessionStatus {
+    Scheduled,
     Ongoing,
     Completed,
     Paused

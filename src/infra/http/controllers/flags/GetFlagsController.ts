@@ -18,7 +18,7 @@ export class GetFlagsController extends BaseController {
     }
 
     async execute(httpRequest: GetFlagsController.Request): Promise<GetFlagsController.Response> {
-        const { page } = httpRequest.body!
+        const { page } = httpRequest.params!
         const response = await this.getFlags.execute({
             page
         })
@@ -31,6 +31,6 @@ export class GetFlagsController extends BaseController {
 }
 
 export namespace GetFlagsController {
-    export type Request = HttpRequest<GetFlagsInterface.Request>
+    export type Request = HttpRequest<undefined, { page?: number }>
     export type Response = HttpResponse<GetFlagsInterface.Response>
 }
