@@ -10,6 +10,6 @@ export interface CreateSessionInterface extends UseCase<CreateSessionInterface.R
 }
 
 export namespace CreateSessionInterface{
-    export type Request = Omit<Session, 'id' | 'startTime'| 'endTime' | 'createdAt'>
+    export type Request = Omit<Session, 'id' | 'startTime'| 'endTime' | 'createdAt' | 'token'>
     export type Response = string | SessionAlreadyExistError
 }

@@ -6,5 +6,6 @@ import { SessionRepository } from "@infra/db/mongodb/repositories/SessionReposit
 export const makeCreateSession = (): CreateSessionInterface => {
     const roomRepository = new SessionRepository()
     const GetSessionByProctoredUserIdRepository = new SessionRepository()
-    return new CreateSession(roomRepository, GetSessionByProctoredUserIdRepository)
+    const getActiveSessionsRepo = new SessionRepository()
+    return new CreateSession(roomRepository, GetSessionByProctoredUserIdRepository, getActiveSessionsRepo)
 }

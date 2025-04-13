@@ -2,16 +2,18 @@ import { CreateProctoredUserRepository } from "@application/interfaces/repositor
 import { GetProctoredUserByIdentifierRepository } from "@application/interfaces/repositories/proctored-users/GetProctoredUserByIdentifierRepository"
 import { GetProctoredUsersRepository } from "@application/interfaces/repositories/proctored-users/GetProctoredUsersRepository"
 import { GetProctoredUsers } from "@application/use-cases/proctored-users/GetProctoredUsers"
-import { mapCollection, mapDocument, objectIdToString } from "../helpers/mapper"
+import { mapCollection, mapDocument, objectIdToString, stringToObjectId } from "../helpers/mapper"
 import dbConnection from "../helpers/db-connection"
 import { Collection } from "mongodb"
+import { GetProctoredUserByIdRepository } from "@application/interfaces/repositories/proctored-users/GetProctoredUserByIdRepository"
 
 
 
 export class ProctoredUserRepository implements
     CreateProctoredUserRepository,
     GetProctoredUserByIdentifierRepository,
-    GetProctoredUsersRepository {
+    GetProctoredUsersRepository,
+    GetProctoredUserByIdRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('proctored_users')
     }
@@ -46,5 +48,12 @@ export class ProctoredUserRepository implements
         return {
             data: sessions, page, total, totalPages,
         };
+    }
+
+    async getProctoredUserById(id: GetProctoredUserByIdRepository.Request): Promise<GetProctoredUserByIdRepository.Response> {
+        const collection = await ProctoredUserRepository.getCollection()
+        const _id = stringToObjectId(id)
+        const rawProctoredUser = await collection.findOne({ _id })
+        return rawProctoredUser && mapDocument(rawProctoredUser)
     }
 }

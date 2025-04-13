@@ -10,6 +10,7 @@ export type SessionProps = {
     roomId: string
     // socketId: string
     proctoredUserId: string
+    token?: string
     startTime?: string
     endTime?: string
     status?: SessionStatus
@@ -20,6 +21,7 @@ export class Session {
     public readonly roomId: string
     // public readonly socketId: string
     public readonly proctoredUserId: string
+    public readonly token?: string
     public readonly startTime?: string
     public readonly endTime?: string
     public readonly status?: SessionStatus
@@ -28,6 +30,7 @@ export class Session {
         this.id = props.id
         this.roomId = props.roomId
         // this.socketId = props.socketId
+        this.token = props.token
         this.proctoredUserId = props.proctoredUserId
         this.startTime = props.startTime
         this.endTime = props.endTime
