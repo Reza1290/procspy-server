@@ -1,4 +1,4 @@
-import { CreateLogInterface } from "@application/interfaces/use-cases/logs/CreateLogIntreface";
+import { CreateLogByTokenInterface } from "@application/interfaces/use-cases/logs/CreateLogByTokenInterface";
 import { ok, unauthorized } from "../../helpers/http";
 import { HttpRequest } from "../../interfaces/HttpRequest";
 import { HttpResponse } from "../../interfaces/HttpResponse";
@@ -9,19 +9,19 @@ import { SessionNotExistError } from "@application/errors/SessionNotExistError";
 
 
 
-export class CreateLogController extends BaseController {
+export class CreateLogByTokenController extends BaseController {
 
     constructor(
-        private readonly createLogValidation: Validation,
-        private readonly createLog: CreateLogInterface
+        private readonly createLogByTokenValidation: Validation,
+        private readonly createLogByToken: CreateLogByTokenInterface
     ) {
-        super(createLogValidation)
+        super(createLogByTokenValidation)
     }
 
-    async execute(httpRequest: CreateLogController.Request): Promise<CreateLogController.Response> {
-        const { sessionId, flagKey, attachment } = httpRequest.body!
-        const idOrError = await this.createLog.execute({
-            attachment, sessionId, flagKey
+    async execute(httpRequest: CreateLogByTokenController.Request): Promise<CreateLogByTokenController.Response> {
+        const { token, flagKey, attachment } = httpRequest.body!
+        const idOrError = await this.createLogByToken.execute({
+            attachment, token, flagKey
         })
         if (idOrError instanceof SessionNotExistError) {
             return unauthorized(idOrError)
@@ -33,7 +33,7 @@ export class CreateLogController extends BaseController {
 
 }
 
-export namespace CreateLogController {
-    export type Request = HttpRequest<CreateLogInterface.Request>
+export namespace CreateLogByTokenController {
+    export type Request = HttpRequest<CreateLogByTokenInterface.Request>
     export type Response = HttpResponse<{ id: string } | SessionNotExistError>
 }
