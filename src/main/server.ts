@@ -7,6 +7,8 @@ import setupApp from './config/app';
 
 dbConnection.connect(env.mongodbUrl)
   .then(async () => {
+    await dbConnection.migration()
+    
     const app = setupApp();
 
     const httpsOptions = {

@@ -12,7 +12,7 @@ export class CreateLog implements CreateLogInterface {
     ) { }
 
     async execute(body: CreateLogInterface.Request): Promise<CreateLogInterface.Response> {
-        const { sessionId, message, flagKey } = body
+        const { sessionId, attachment, flagKey } = body
         
         const isSessionExist = await this.getSessionByIdRepository.getSessionById(sessionId)
         
@@ -21,9 +21,9 @@ export class CreateLog implements CreateLogInterface {
         }
 
         const newLog = await this.createLogRepository.createLog({
-            message: message,
+            attachment: attachment ?? "",
             sessionId: sessionId,
-            flagKey: flagKey ?? null
+            flagKey: flagKey ?? "DEFAULT"
         })
         
         return newLog

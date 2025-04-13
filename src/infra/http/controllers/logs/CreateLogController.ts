@@ -19,9 +19,9 @@ export class CreateLogController extends BaseController {
     }
 
     async execute(httpRequest: CreateLogController.Request): Promise<CreateLogController.Response> {
-        const { sessionId, flagKey, message } = httpRequest.body!
+        const { sessionId, flagKey, attachment } = httpRequest.body!
         const idOrError = await this.createRoom.execute({
-            message, sessionId, flagKey
+            attachment, sessionId, flagKey
         })
         if (idOrError instanceof SessionNotExistError) {
             return unauthorized(idOrError)
