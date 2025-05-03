@@ -19,9 +19,9 @@ export class CreateLogByTokenController extends BaseController {
     }
 
     async execute(httpRequest: CreateLogByTokenController.Request): Promise<CreateLogByTokenController.Response> {
-        const { token, flagKey, attachment } = httpRequest.body!
+        const { token, flagKey, attachment, logType } = httpRequest.body!
         const idOrError = await this.createLogByToken.execute({
-            attachment, token, flagKey
+            attachment, token, flagKey, logType
         })
         if (idOrError instanceof SessionNotExistError) {
             return unauthorized(idOrError)

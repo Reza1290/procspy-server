@@ -12,7 +12,7 @@ export class CreateLogByToken implements CreateLogByTokenInterface {
     ) { }
 
     async execute(body: CreateLogByTokenInterface.Request): Promise<CreateLogByTokenInterface.Response> {
-        const { flagKey, token, attachment } = body
+        const { flagKey, token, attachment, logType } = body
         
         const isSessionExist = await this.getSessionByTokenRepository.getSessionByToken(token)
 
@@ -23,7 +23,8 @@ export class CreateLogByToken implements CreateLogByTokenInterface {
         const newLog = await this.createLogRepository.createLog({
             attachment: attachment ?? "",
             sessionId: isSessionExist.id,
-            flagKey: flagKey ?? "DEFAULT"
+            flagKey: flagKey ?? "DEFAULT",
+            logType: logType ?? "System"
         })
         
         return newLog

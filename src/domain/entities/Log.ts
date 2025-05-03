@@ -1,7 +1,14 @@
+export enum logType {
+    System = "System",
+    True = "True",
+    False = "False"
+}
+
 export type LogProps = {
     id: string
     sessionId: string
     attachment?: string
+    logType: logType 
     timestamp: string
     flagKey?: string | null
 }
@@ -15,6 +22,8 @@ export class Log {
     
     public readonly attachment?: string
 
+    public readonly logType: logType
+
     public readonly flagKey?: string | null
 
     constructor(props: LogProps){
@@ -22,6 +31,7 @@ export class Log {
         this.sessionId = props.sessionId
         this.attachment = props.attachment
         this.timestamp = props.timestamp
+        this.logType = props.logType
         this.flagKey = props.flagKey
     }
 }
