@@ -1,14 +1,16 @@
 import 'module-alias/register';
 import fs from 'fs';
-import httpolyglot, { createServer } from '@httptoolkit/httpolyglot'; 
+import httpolyglot, { createServer } from '@httptoolkit/httpolyglot';
 import dbConnection from '../infra/db/mongodb/helpers/db-connection';
 import env from './config/env';
 import setupApp from './config/app';
+import { ok } from 'assert';
+import path from 'path';
 
 dbConnection.connect(env.mongodbUrl)
   .then(async () => {
     await dbConnection.migration()
-    
+
     const app = setupApp();
 
     const httpsOptions = {

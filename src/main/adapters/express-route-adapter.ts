@@ -10,7 +10,8 @@ export const expressRouteAdapter = (
         params: req.params,
         query: req.query, 
         headers: req.headers,
-        userId: req.userId
+        userId: req.userId,
+        file: req.file
     }
     // return res.status(200).json({
     //     error: httpRequest

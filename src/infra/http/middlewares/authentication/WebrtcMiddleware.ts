@@ -18,11 +18,12 @@ export class WebrtcMiddleware extends BaseMiddleware {
 
 
     async execute(httpRequest: WebrtcMiddleware.Request): Promise<WebrtcMiddleware.Response> {
-        const {secret} = httpRequest.body!
+        let secretHeader = httpRequest.headers?.authorization!
 
-        if(!secret){
+        if (!secretHeader) {
             return forbidden(new AuthTokenNotProvidedError())
         }
+        const [, secret] = secretHeader.split(' ')
 
         const okOrError = await this.authenticate.execute(secret)
         if (okOrError instanceof ForbiddenError) {
@@ -35,5 +36,5 @@ export class WebrtcMiddleware extends BaseMiddleware {
 
 export namespace WebrtcMiddleware {
     export type Request = HttpRequest<{ secret: string }>
-    export type Response = HttpResponse< {} | AuthTokenNotProvidedError | InvalidAuthTokenError>
+    export type Response = HttpResponse<{} | AuthTokenNotProvidedError | InvalidAuthTokenError>
 }
