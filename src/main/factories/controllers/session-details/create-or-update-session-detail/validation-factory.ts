@@ -1,0 +1,10 @@
+import { RequiredFieldValidation } from "@infra/http/validations/RequiredFieldValidation"
+import { ValidationComposite } from "@infra/http/validations/ValidationComposite"
+
+export const makeCreateOrUpdateSessionDetailValidation = ():ValidationComposite => {
+    return new ValidationComposite([
+        new RequiredFieldValidation('sessionId'), 
+        new RequiredFieldValidation('ipAddress'), 
+        new RequiredFieldValidation('deviceId') 
+      ], 'body')
+}

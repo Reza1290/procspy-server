@@ -4,6 +4,7 @@ import globalSettingsRoutes from "@main/routes/global-settings-routes"
 import logsRoutes from "@main/routes/logs-routes"
 import proctoredUsersRoutes from "@main/routes/proctored-users-routes"
 import roomsRoutes from "@main/routes/rooms-routes"
+import sessionDetailsRoutes from "@main/routes/session-details-routes"
 import sessionsRoutes from "@main/routes/sessions-routes"
 import storageRoutes from "@main/routes/storage-routes"
 import express, { Router, Express, response } from "express"
@@ -22,4 +23,5 @@ export default (app: Express): void => {
     proctoredUsersRoutes(router)
     globalSettingsRoutes(router)
     storageRoutes(router)
+    sessionDetailsRoutes(router)
 }

@@ -1,0 +1,11 @@
+import { CreateOrUpdateSessionDetailInterface } from "@application/interfaces/use-cases/session-details/CreateOrUpdateSessionDetailInterface"
+import { CreateOrUpdateSessionDetail } from "@application/use-cases/session-details/CreateOrUpdateSessionDetailBySessionId"
+import { SessionDetailRepository } from "@infra/db/mongodb/repositories/SessionDetailRespository"
+import { SessionRepository } from "@infra/db/mongodb/repositories/SessionRepository"
+
+
+export const makeCreateOrUpdateSessionDetail = (): CreateOrUpdateSessionDetailInterface => {
+    const sessionDetailRespository = new SessionDetailRepository()
+    const GetSessionByIdRepository = new SessionRepository()
+    return new CreateOrUpdateSessionDetail(sessionDetailRespository, GetSessionByIdRepository)
+}
