@@ -35,5 +35,5 @@ export class SignInProctoredUserController extends BaseController {
 
 export namespace SignInProctoredUserController {
     export type Request = HttpRequest<SignInProctoredUserInterface.Request>
-    export type Response = HttpResponse<{ session: Session, user: ProctoredUser} | SessionNotExistError>
+    export type Response = HttpResponse<{ session: Omit<Session , 'id'>, user: Omit<ProctoredUser, 'id'>} | SessionNotExistError>
 }

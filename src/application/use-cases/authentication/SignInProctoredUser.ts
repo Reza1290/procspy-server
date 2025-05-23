@@ -23,10 +23,12 @@ export class SignInProctoredUser implements SignInProctoredUserInterface {
         }
 
         const user = await this.getProctoredUserByIdRepository.getProctoredUserById(session.proctoredUserId)
-        console.log(user)
+
         if (!user) {
             return new SessionNotExistError()
         }
+        const { id: _, ...newUser } = user;
+        const { id: __, ...newSession } = session;
 
         const PLATFORM_TYPE = await this.getGlobalSettingByKeyRepository.getGlobalSettingByKey("PLATFORM_TYPE");
         const PLATFORM_DOMAIN = await this.getGlobalSettingByKeyRepository.getGlobalSettingByKey("PLATFORM_DOMAIN");
@@ -43,10 +45,10 @@ export class SignInProctoredUser implements SignInProctoredUserInterface {
         if (PLATFORM_NAME) {
             settings["PLATFORM_NAME"] = PLATFORM_NAME;
         }
-
+        
         return {
-            session,
-            user,
+            session: newSession,
+            user: newUser,
             settings
         }
 
