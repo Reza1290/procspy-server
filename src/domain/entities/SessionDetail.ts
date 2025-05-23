@@ -23,7 +23,7 @@ export type SessionDetailProps = {
     primaryDisplay: string
     browser: string
     browserVersion: string
-    cpuNumOfProcessors: Number
+    cpuNumOfProcessors: number
     gpu?: string
     ramSize?: string
     storages?: Array<Storage>
