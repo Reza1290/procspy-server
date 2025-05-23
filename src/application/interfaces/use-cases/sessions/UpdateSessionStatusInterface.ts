@@ -1,4 +1,4 @@
-import { Session } from "@domain/entities/Session";
+import { Session, SessionStatus } from "@domain/entities/Session";
 import { UseCase } from "../UseCase";
 import { SessionAlreadyExistError } from "@application/errors/SessionAlreadyExistError";
 import { SessionNotExistError } from "@application/errors/SessionNotExistError";
@@ -7,11 +7,11 @@ import { SessionLockedError } from "@application/errors/SesionLockedError";
 
 export interface UpdateSessionStatusInterface extends UseCase<UpdateSessionStatusInterface.Request, UpdateSessionStatusInterface.Response> {
 
-    execute(token: UpdateSessionStatusInterface.Request): Promise<UpdateSessionStatusInterface.Response>
+    execute(credentials: UpdateSessionStatusInterface.Request): Promise<UpdateSessionStatusInterface.Response>
 
 }
 
 export namespace UpdateSessionStatusInterface {
-    export type Request = string
+    export type Request = {token:string, status:SessionStatus}
     export type Response = Session | SessionNotExistError | SessionLockedError
 }

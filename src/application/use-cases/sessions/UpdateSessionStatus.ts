@@ -14,26 +14,25 @@ export class UpdateSessionStatus implements UpdateSessionStatusInterface {
         private readonly updateSessionStatusRepository: UpdateSessionStatusRepository,
     ) { }
 
-    async execute(token: UpdateSessionStatusInterface.Request): Promise<UpdateSessionStatusInterface.Response> {
-        
+    async execute(credentials: UpdateSessionStatusInterface.Request): Promise<UpdateSessionStatusInterface.Response> {
+        const{ token, status} = credentials
         const session = await this.getSessionByTokenRepository.getSessionByToken(token)
         if (!session) {
             return new SessionNotExistError()
         }
         let updatedSession = null
-        let status = SessionStatus.Scheduled
-        if (session.status === SessionStatus.Scheduled) {
-            status = SessionStatus.Ongoing
+        
+        
+        if (status ==  SessionStatus.Ongoing) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, startTime: (new Date()).toISOString() })
-            console.log(updatedSession)
-        } else if (session.status === SessionStatus.Ongoing) {
-            status = SessionStatus.Completed
+        } else if (status == SessionStatus.Completed) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, endTime: (new Date()).toISOString() })
-            console.log(updatedSession)
-        } else if (session.status === SessionStatus.Completed) {
+        } else if (status == SessionStatus.Paused) {
+            updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status })
+        }else{
             return new SessionLockedError()
         }
-        console.log(updatedSession)
+
         if (!updatedSession) {
             return new SessionNotExistError()
         }

@@ -20,9 +20,9 @@ export class UpdateSessionStatusController extends BaseController {
     }
 
     async execute(httpRequest: UpdateSessionStatusController.Request): Promise<UpdateSessionStatusController.Response> {
-        const {token} = httpRequest.params!
+        const {token , status} = httpRequest.params!
         
-        const response = await this.updateSessionStatus.execute(token)
+        const response = await this.updateSessionStatus.execute({token, status})
         
         if(response instanceof SessionNotExistError || response instanceof SessionLockedError){
             return notFound(response)
