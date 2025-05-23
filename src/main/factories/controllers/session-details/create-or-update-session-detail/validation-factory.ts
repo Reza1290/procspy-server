@@ -3,7 +3,7 @@ import { ValidationComposite } from "@infra/http/validations/ValidationComposite
 
 export const makeCreateOrUpdateSessionDetailValidation = ():ValidationComposite => {
     return new ValidationComposite([
-        new RequiredFieldValidation('sessionId'), 
+        new RequiredFieldValidation('token'), 
         new RequiredFieldValidation('ipAddress'), 
         new RequiredFieldValidation('deviceId') 
       ], 'body')

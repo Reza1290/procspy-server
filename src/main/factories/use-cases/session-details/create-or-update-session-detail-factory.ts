@@ -1,5 +1,5 @@
 import { CreateOrUpdateSessionDetailInterface } from "@application/interfaces/use-cases/session-details/CreateOrUpdateSessionDetailInterface"
-import { CreateOrUpdateSessionDetail } from "@application/use-cases/session-details/CreateOrUpdateSessionDetailBySessionId"
+import { CreateOrUpdateSessionDetail } from "@application/use-cases/session-details/CreateOrUpdateSessionDetail"
 import { SessionDetailRepository } from "@infra/db/mongodb/repositories/SessionDetailRespository"
 import { SessionRepository } from "@infra/db/mongodb/repositories/SessionRepository"
 
