@@ -23,11 +23,11 @@ export class UpdateSessionStatus implements UpdateSessionStatusInterface {
         let updatedSession = null
         
         
-        if (status ==  SessionStatus.Ongoing) {
+        if (status ==  SessionStatus.Ongoing && session.status !== SessionStatus.Completed) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, startTime: (new Date()).toISOString() })
         } else if (status == SessionStatus.Completed) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, endTime: (new Date()).toISOString() })
-        } else if (status == SessionStatus.Paused) {
+        } else if (status == SessionStatus.Paused && session.status !== SessionStatus.Completed) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status })
         }else{
             return new SessionLockedError()
