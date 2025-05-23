@@ -5,13 +5,13 @@ import { SessionNotExistError } from "@application/errors/SessionNotExistError";
 import { SessionLockedError } from "@application/errors/SesionLockedError";
 
 
-export interface UpdateSessionStatusInterface extends UseCase<UpdateSessionStatusInterface.Request, UpdateSessionStatusInterface.Response> {
+export interface UpdateSessionInterface extends UseCase<UpdateSessionInterface.Request, UpdateSessionInterface.Response> {
 
-    execute(token: UpdateSessionStatusInterface.Request): Promise<UpdateSessionStatusInterface.Response>
+    execute(credentials: UpdateSessionInterface.Request): Promise<UpdateSessionInterface.Response>
 
 }
 
-export namespace UpdateSessionStatusInterface {
-    export type Request = string
+export namespace UpdateSessionInterface {
+    export type Request = Omit<Session, 'createdAt'>
     export type Response = Session | SessionNotExistError | SessionLockedError
 }

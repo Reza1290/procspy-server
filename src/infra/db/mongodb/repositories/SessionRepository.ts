@@ -8,6 +8,7 @@ import { GetActiveSessionsByProctoredUserIdRepository } from "@application/inter
 import { GetSessionByTokenRepository } from "@application/interfaces/repositories/sessions/GetSessionByTokenRepository"
 import { Session } from "@domain/entities/Session"
 import { UpdateSessionStatusRepository } from "@application/interfaces/repositories/sessions/UpdateSessionStatusRepository"
+import { UpdateSessionRepository } from "@application/interfaces/repositories/sessions/UpdateSessionRepository"
 
 function generateToken(length: number = 8): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -29,7 +30,8 @@ export class SessionRepository implements
     GetSessionByIdRepository,
     GetActiveSessionsByProctoredUserIdRepository,
     GetSessionByTokenRepository,
-    UpdateSessionStatusRepository {
+    UpdateSessionStatusRepository,
+    UpdateSessionRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('sessions')
     }
@@ -96,16 +98,28 @@ export class SessionRepository implements
 
         const collection = await SessionRepository.getCollection()
 
-        const { id, token } = sessionData
-        if (!id && !token) {
+        const { token } = sessionData
+        if (!token) {
             return null
         }
 
-        const filter = id
-            ? { _id: stringToObjectId(id) }
-            : { token }
+        const filter = { token }
 
         const result = await collection.updateOne(filter, { $set: sessionData })
+
+        const rawSession = await collection.findOne(filter)
+        console.log(rawSession)
+        return rawSession && mapDocument(rawSession)
+    }
+
+    async updateSession(sessionData: UpdateSessionRepository.Request): Promise<UpdateSessionRepository.Response> {
+        const collection = await SessionRepository.getCollection()
+        const { id } = sessionData
+        if (!id) {
+            return null
+        }
+        const filter = { _id: stringToObjectId(id) }
+        const result = await collection.updateOne(filter, { $set: {...sessionData, updatedAt: new Date()} })
 
         const rawSession = await collection.findOne(filter)
         console.log(rawSession)

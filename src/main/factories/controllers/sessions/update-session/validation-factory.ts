@@ -2,8 +2,8 @@ import { RequiredFieldValidation } from "@infra/http/validations/RequiredFieldVa
 import { RequiredOneFromTwoFieldValidation } from "@infra/http/validations/RequiredOneFromTwoFieldValidation"
 import { ValidationComposite } from "@infra/http/validations/ValidationComposite"
 
-export const makeUpdateSessionStatusValidation = ():ValidationComposite => {
+export const makeUpdateSessionValidation = ():ValidationComposite => {
     return new ValidationComposite([
-        new RequiredFieldValidation('token'), 
-      ], 'params')
+        new RequiredFieldValidation('id'), 
+      ], 'body')
 }

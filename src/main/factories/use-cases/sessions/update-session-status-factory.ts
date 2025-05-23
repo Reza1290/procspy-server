@@ -5,7 +5,6 @@ import { SessionRepository } from "@infra/db/mongodb/repositories/SessionReposit
 
 export const makeUpdateSessionStatus = (): UpdateSessionStatusInterface => {
     const updateSessionStatusRepository = new SessionRepository()
-    const GetSessionByIdRepository = new SessionRepository()
     const GetSessionByTokenRepository = new SessionRepository()
-    return new UpdateSessionStatus(updateSessionStatusRepository, GetSessionByIdRepository, GetSessionByTokenRepository)
+    return new UpdateSessionStatus(updateSessionStatusRepository, GetSessionByTokenRepository)
 }
