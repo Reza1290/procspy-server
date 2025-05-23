@@ -1,0 +1,17 @@
+import { Session } from "@domain/entities/Session";
+import { UseCase } from "../UseCase";
+import { SessionAlreadyExistError } from "@application/errors/SessionAlreadyExistError";
+import { SessionNotExistError } from "@application/errors/SessionNotExistError";
+import { SessionLockedError } from "@application/errors/SesionLockedError";
+
+
+export interface UpdateSessionStatusInterface extends UseCase<UpdateSessionStatusInterface.Request, UpdateSessionStatusInterface.Response> {
+
+    execute(credentials: UpdateSessionStatusInterface.Request): Promise<UpdateSessionStatusInterface.Response>
+
+}
+
+export namespace UpdateSessionStatusInterface {
+    export type Request = Partial<Session>
+    export type Response = Session | SessionNotExistError | SessionLockedError
+}

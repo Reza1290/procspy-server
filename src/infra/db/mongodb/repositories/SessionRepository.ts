@@ -7,6 +7,7 @@ import { GetSessionByIdRepository } from "@application/interfaces/repositories/s
 import { GetActiveSessionsByProctoredUserIdRepository } from "@application/interfaces/repositories/sessions/GetActiveSessionsByProctoredUserIdRepository"
 import { GetSessionByTokenRepository } from "@application/interfaces/repositories/sessions/GetSessionByTokenRepository"
 import { Session } from "@domain/entities/Session"
+import { UpdateSessionStatusRepository } from "@application/interfaces/repositories/sessions/UpdateSessionStatusRepository"
 
 function generateToken(length: number = 8): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -27,7 +28,8 @@ export class SessionRepository implements
     GetSessionsByProctoredUserIdRepository,
     GetSessionByIdRepository,
     GetActiveSessionsByProctoredUserIdRepository,
-    GetSessionByTokenRepository {
+    GetSessionByTokenRepository,
+    UpdateSessionStatusRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('sessions')
     }
@@ -90,6 +92,24 @@ export class SessionRepository implements
     }
 
 
+    async updateSessionStatus(sessionData: UpdateSessionStatusRepository.Request): Promise<UpdateSessionStatusRepository.Response> {
 
+        const collection = await SessionRepository.getCollection()
+
+        const { id, token } = sessionData
+        if (!id && !token) {
+            return null
+        }
+
+        const filter = id
+            ? { _id: stringToObjectId(id) }
+            : { token }
+
+        const result = await collection.updateOne(filter, { $set: sessionData })
+
+        const rawSession = await collection.findOne(filter)
+        console.log(rawSession)
+        return rawSession && mapDocument(rawSession)
+    }
 
 }
