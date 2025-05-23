@@ -1,8 +1,8 @@
 export enum SessionStatus {
-    Scheduled,
-    Ongoing,
-    Completed,
-    Paused
+    Scheduled = "scheduled",
+    Ongoing = "ongoing",
+    Completed = "completed",
+    Paused = "paused"
 }
 
 export type SessionProps = {
