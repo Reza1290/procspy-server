@@ -25,7 +25,7 @@ export class UpdateSession implements UpdateSessionInterface {
             return new SessionNotExistError()
         }
 
-        const updatedSession = await this.UpdateSessionRepository.updateSession({ id, proctoredUserId, roomId, endTime, startTime, status, token })
+        const updatedSession = await this.UpdateSessionRepository.updateSession({ id, proctoredUserId, roomId, status, token })
 
         if (!updatedSession) {
             return new SessionNotExistError()
