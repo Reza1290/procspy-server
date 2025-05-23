@@ -8,6 +8,7 @@ type Display = {
     name: string
     height: string
     width: string
+    isPrimary: boolean
 }
 
 export type SessionDetailProps = {
