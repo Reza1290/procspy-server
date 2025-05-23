@@ -14,5 +14,5 @@ export interface SignInProctoredUserInterface extends UseCase<SignInProctoredUse
 
 export namespace SignInProctoredUserInterface{
     export type Request = { token: string }
-    export type Response = {session: Session , user: ProctoredUser, settings: Record<string,GlobalSetting>} | SessionNotExistError
+    export type Response = {session: Omit<Session, 'id'> , user: Omit<ProctoredUser, 'id'>, settings: Record<string,GlobalSetting>} | SessionNotExistError
 }
