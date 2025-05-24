@@ -6,6 +6,7 @@ import { SessionRepository } from "@infra/db/mongodb/repositories/SessionReposit
 
 export const makeCreateOrUpdateSessionDetail = (): CreateOrUpdateSessionDetailInterface => {
     const sessionDetailRespository = new SessionDetailRepository()
+    const getSessionDetailBySessionId = new SessionDetailRepository()
     const GetSessionByIdRepository = new SessionRepository()
-    return new CreateOrUpdateSessionDetail(sessionDetailRespository, GetSessionByIdRepository)
+    return new CreateOrUpdateSessionDetail(sessionDetailRespository,getSessionDetailBySessionId, GetSessionByIdRepository)
 }

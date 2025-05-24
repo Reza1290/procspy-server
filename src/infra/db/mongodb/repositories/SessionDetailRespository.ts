@@ -7,11 +7,13 @@ import { GetSessionByIdRepository } from "@application/interfaces/repositories/s
 import { GetActiveSessionsByProctoredUserIdRepository } from "@application/interfaces/repositories/sessions/GetActiveSessionsByProctoredUserIdRepository"
 import { GetSessionByTokenRepository } from "@application/interfaces/repositories/sessions/GetSessionByTokenRepository"
 import { Session } from "@domain/entities/Session"
-import { CreateOrUpdateSessionDetailRepository } from "@application/interfaces/repositories/session-details/CreateOrUpdateSessionDetail"
+import { CreateOrUpdateSessionDetailRepository } from "@application/interfaces/repositories/session-details/CreateOrUpdateSessionDetailRepository"
+import { GetSessionDetailBySessionIdRepository } from "@application/interfaces/repositories/session-details/GetSessionDetailBySessionIdRepository"
 
 
 export class SessionDetailRepository implements
-    CreateOrUpdateSessionDetailRepository {
+    CreateOrUpdateSessionDetailRepository,
+    GetSessionDetailBySessionIdRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('session_details')
     }
@@ -19,7 +21,9 @@ export class SessionDetailRepository implements
     async createOrUpdateSessionDetail(sessionDetailData: CreateOrUpdateSessionDetailRepository.Request): Promise<CreateOrUpdateSessionDetailRepository.Response> {
         const collection = await SessionDetailRepository.getCollection();
 
-        const filter = { sessionId: sessionDetailData.sessionId }; 
+        const filter = { 
+            sessionId: sessionDetailData.sessionId, 
+        }; 
         const update = {
             $set: {
                 ...sessionDetailData,
@@ -30,10 +34,18 @@ export class SessionDetailRepository implements
             }
         };
         const result =  await collection.updateOne(filter, update, { upsert: true });
-
+        
         const rawSessionDetail = await collection.findOne(filter);
         console.log(rawSessionDetail)
 
+        return rawSessionDetail && mapDocument(rawSessionDetail)
+    }
+
+    async getSessionDetailBySessionId(sessionId: GetSessionDetailBySessionIdRepository.Request): Promise<GetSessionDetailBySessionIdRepository.Response> {
+        const collection = await SessionDetailRepository.getCollection();
+
+        const rawSessionDetail = await collection.findOne({ sessionId })
+        console.log(rawSessionDetail)
         return rawSessionDetail && mapDocument(rawSessionDetail)
     }
 }

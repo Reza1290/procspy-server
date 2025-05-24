@@ -6,6 +6,6 @@ export interface CreateOrUpdateSessionDetailRepository{
 }
 
 export namespace CreateOrUpdateSessionDetailRepository {
-    export type Request = Omit<SessionDetail, 'id' | 'createdAt' | 'updatedAt'>
+    export type Request = Omit<SessionDetail, 'id' | 'startTime' | 'updatedAt' | 'createdAt'>
     export type Response = SessionDetail
 }
