@@ -19,12 +19,12 @@ export class CreateOrUpdateSessionDetailController extends BaseController {
 
     async execute(httpRequest: CreateOrUpdateSessionDetailController.Request): Promise<CreateOrUpdateSessionDetailController.Response> {
         const body = httpRequest.body!
-        const idOrError = await this.createOrUpdateSessionDetail.execute(body)
+        const valueOrError = await this.createOrUpdateSessionDetail.execute(body)
         
-        if (idOrError instanceof RoomAlreadyExistError) {
-            return unauthorized(idOrError)
+        if (valueOrError instanceof Error) {
+            return unauthorized(valueOrError)
         } else {
-            return ok(idOrError)
+            return ok(valueOrError)
         }
 
     }
@@ -33,5 +33,5 @@ export class CreateOrUpdateSessionDetailController extends BaseController {
 
 export namespace CreateOrUpdateSessionDetailController {
     export type Request = HttpRequest<CreateOrUpdateSessionDetailInterface.Request>
-    export type Response = HttpResponse<{ id: string } | RoomAlreadyExistError>
+    export type Response = HttpResponse<CreateOrUpdateSessionDetailInterface.Response>
 }
