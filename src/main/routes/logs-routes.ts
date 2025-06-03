@@ -5,9 +5,12 @@ import { makeCreateLogController } from "@main/factories/controllers/logs/create
 import { webrtcMiddleware } from "@main/middlewares/webrtc-middleware";
 import { makeCreateLogByTokenController } from "@main/factories/controllers/logs/create-log-by-token/controller-factory";
 import { makeGetProctoredUserDetailLogByTokenController } from "@main/factories/controllers/etc/get-proctored-user-detail-log-by-token/controller-factory";
+import { makeGetLogsByRoomIdController } from "@main/factories/controllers/logs/get-logs-by-room-id/controller-factory";
 
 
 export default(router: Router): void => {
     router.post('/log', authMiddleware, expressRouteAdapter(makeCreateLogController()))
     router.post('/save-log', webrtcMiddleware, expressRouteAdapter(makeCreateLogByTokenController()))
+
+    router.get('/logs-in-room/:roomId', authMiddleware, expressRouteAdapter(makeGetLogsByRoomIdController()))
 }

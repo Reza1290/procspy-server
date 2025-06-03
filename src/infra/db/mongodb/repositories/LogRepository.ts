@@ -4,13 +4,16 @@ import { mapCollection, mapDocument, objectIdToString } from "../helpers/mapper"
 
 import { CreateLogRepository } from "@application/interfaces/repositories/logs/CreateLogRepository"
 import { GetLogsBySessionIdRepository } from "@application/interfaces/repositories/logs/GetLogsBySessionIdRepository";
+import { GetLogsByRoomIdRepository } from "@application/interfaces/repositories/logs/GetLogsByRoomIdRepository";
+import { EnrichedLog } from "@application/interfaces/use-cases/logs/GetLogsByRoomIdInterface";
 
 
 
 
 export class LogRepository implements
     CreateLogRepository,
-    GetLogsBySessionIdRepository {
+    GetLogsBySessionIdRepository,
+    GetLogsByRoomIdRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('logs')
     }
@@ -30,5 +33,94 @@ export class LogRepository implements
         const logs = mapCollection(rawLogs)
 
         return logs
+    }
+
+    async getLogsByRoomId(params: GetLogsByRoomIdRepository.Request): Promise<GetLogsByRoomIdRepository.Response> {
+        const collection = await LogRepository.getCollection();
+        const { roomId, page, paginationLimit } = params
+        const limitNum = Number(paginationLimit)
+        const offset = (page - 1) * paginationLimit;
+        const pipeline: Array<any> = [
+            {
+                $addFields: {
+                    sessionIdObj: { $toObjectId: "$sessionId" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "sessions",
+                    localField: "sessionIdObj",
+                    foreignField: "_id",
+                    as: "session"
+                }
+            },
+            {
+                $unwind: { path: "$session", preserveNullAndEmptyArrays: true }
+            },
+            {
+                $match: {
+                    "session.roomId": roomId
+                }
+            },
+            {
+                $sort: { timestamp: -1 }
+            },
+            {
+                $skip: offset
+            },
+            {
+                $limit: limitNum
+            },
+            {
+                $lookup: {
+                    from: "flags",
+                    localField: "flagKey",
+                    foreignField: "flagKey",
+                    as: "flag"
+                }
+            },
+            {
+                $unwind: { path: "$flag", preserveNullAndEmptyArrays: true }
+            },
+        ];
+        const enrichedLogs = await collection.aggregate(pipeline).toArray() as EnrichedLog[];
+        const countPipeline = [
+            {
+                $addFields: {
+                    sessionIdObj: { $toObjectId: "$sessionId" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "sessions",
+                    localField: "sessionIdObj",
+                    foreignField: "_id",
+                    as: "session"
+                }
+            },
+            {
+                $unwind: "$session"
+            },
+            {
+                $match: {
+                    "session.roomId": roomId
+                }
+            },
+            {
+                $count: "total"
+            }
+        ];
+
+        const countResult = await collection.aggregate(countPipeline).toArray();
+        const total = countResult[0]?.total ?? 0;
+
+        const totalPages = Math.ceil(total / paginationLimit);
+
+        return {
+            data: enrichedLogs,
+            page,
+            total,
+            totalPages,
+        };
     }
 }
