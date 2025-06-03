@@ -9,6 +9,8 @@ import { GetSessionByTokenRepository } from "@application/interfaces/repositorie
 import { Session } from "@domain/entities/Session"
 import { UpdateSessionStatusRepository } from "@application/interfaces/repositories/sessions/UpdateSessionStatusRepository"
 import { UpdateSessionRepository } from "@application/interfaces/repositories/sessions/UpdateSessionRepository"
+import { GetSessionsByRoomIdRepository } from "@application/interfaces/repositories/sessions/GetSessionsByRoomIdRepository"
+import { EnrichedSession } from "@application/interfaces/use-cases/sessions/GetSessionsByRoomIdInterface"
 
 function generateToken(length: number = 8): string {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -31,7 +33,8 @@ export class SessionRepository implements
     GetActiveSessionsByProctoredUserIdRepository,
     GetSessionByTokenRepository,
     UpdateSessionStatusRepository,
-    UpdateSessionRepository {
+    UpdateSessionRepository,
+    GetSessionsByRoomIdRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('sessions')
     }
@@ -119,11 +122,97 @@ export class SessionRepository implements
             return null
         }
         const filter = { _id: stringToObjectId(id) }
-        const result = await collection.updateOne(filter, { $set: {...sessionData, updatedAt: new Date()} })
+        const result = await collection.updateOne(filter, { $set: { ...sessionData, updatedAt: new Date() } })
 
         const rawSession = await collection.findOne(filter)
         console.log(rawSession)
         return rawSession && mapDocument(rawSession)
     }
 
+    async getSessionsByRoomId(params: GetSessionsByRoomIdRepository.Request): Promise<GetSessionsByRoomIdRepository.Response> {
+
+        const collection = await SessionRepository.getCollection();
+        const { roomId, page, paginationLimit } = params
+        const limitNum = Number(paginationLimit)
+        const offset = (page - 1) * paginationLimit;
+        const pipeline = [
+            {
+                $match: {
+                    roomId,
+                    status: { $in: ["ongoing", "scheduled", "paused"] },
+                },
+            },
+            {
+                $sort: { _id: -1 }
+            },
+            {
+                $skip: offset,
+            },
+            {
+                $limit: limitNum,
+            },
+
+            {
+                $addFields: {
+                    proctoredUserIdObj: { $toObjectId: "$proctoredUserId" },
+                    sessionIdStr: { $toString: "$_id" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "proctored_users",
+                    localField: "proctoredUserIdObj",
+                    foreignField: "_id",
+                    as: "proctored_user"
+                }
+            },
+            {
+                $unwind: { path: "$proctored_user", preserveNullAndEmptyArrays: true }
+            },
+            {
+                $lookup: {
+                    from: "session_details",
+                    localField: "sessionIdStr",
+                    foreignField: "sessionId",
+                    as: "session_details"
+                }
+            },
+            {
+                $unwind: { path: "$session_details", preserveNullAndEmptyArrays: true }
+            }
+            // {
+            //     $lookup: {
+            //         from: "SessionReport",
+            //         localField: "sessionIdStr",
+            //         foreignField: "sessionId",
+            //         as: "session_report",
+            //     },
+            // },
+            // {
+            //     $unwind: {
+            //         path: "$session_report",
+            //         preserveNullAndEmptyArrays: true,
+            //     },
+            // },
+
+        ];
+
+        const enrichedSessions = await collection.aggregate(pipeline).toArray() as EnrichedSession[];
+        console.log(enrichedSessions)
+        const total = await collection.countDocuments({
+            roomId,
+            status: { $in: [0, 1, 2] },
+        });
+
+        const totalPages = Math.ceil(total / paginationLimit);
+
+        return {
+            data: enrichedSessions,
+            page,
+            total,
+            totalPages,
+        };
+
+
+    }
 }
