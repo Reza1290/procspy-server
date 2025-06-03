@@ -83,7 +83,7 @@ export class SessionRepository implements
 
     async getActiveSessionsByProctoredUserId(proctoredUserId: GetActiveSessionsByProctoredUserIdRepository.Request): Promise<GetActiveSessionsByProctoredUserIdRepository.Response> {
         const collection = await SessionRepository.getCollection()
-        const rawSessions = await collection.find({ proctoredUserId, status: { $in: [0, 1, 2] } }).toArray()
+        const rawSessions = await collection.find({ proctoredUserId, status: { $in: ["ongoing", "scheduled", "paused"] } }).toArray()
 
         const sessions = mapCollection(rawSessions)
         return sessions
