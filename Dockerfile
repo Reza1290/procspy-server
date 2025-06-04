@@ -3,14 +3,14 @@ FROM node:20-slim AS builder
 
 WORKDIR /app
 
-# Install build tools only
+# Install deps first for better caching
 COPY package*.json ./
-RUN npm install --only=production && npm install --only=dev
+RUN npm ci
 
-# Salin seluruh source code
+# Copy source
 COPY . .
 
-# Build TypeScript
+# Build TypeScript project
 RUN npm run build
 
 # Stage 2: Production runtime
@@ -18,17 +18,14 @@ FROM node:20-slim
 
 WORKDIR /app
 
-# Hanya salin dependensi production
-COPY --from=builder /app/node_modules ./node_modules
+# Only copy production deps
+COPY package*.json ./
+RUN npm ci --omit=dev
 
-# Hanya salin hasil build
+# Copy built files
 COPY --from=builder /app/dist ./dist
-
-# Jika kamu perlu public folder (hasil copy dari cpx), pastikan sudah ada di dist/public
 COPY --from=builder /app/dist/public ./dist/public
 
-# Jalankan server
 CMD ["node", "dist/main/server.js"]
 
-# Gunakan port yang sesuai
 EXPOSE 3000
