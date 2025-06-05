@@ -38,7 +38,7 @@ export class ProctoredUserRepository implements
         const rawProctoredUsers = await collection.find({})
             .sort({ createdAt: -1 })
             .skip(offset)
-            .limit(paginationLimit)
+            .limit(Number(paginationLimit))
             .toArray()
 
         const sessions = mapCollection(rawProctoredUsers)

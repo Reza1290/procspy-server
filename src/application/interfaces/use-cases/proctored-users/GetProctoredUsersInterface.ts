@@ -9,6 +9,6 @@ export interface GetProctoredUsersInterface extends UseCase<GetProctoredUsersInt
 }
 
 export namespace GetProctoredUsersInterface {
-    export type Request = { page?: number };
+    export type Request = { page?: number, paginationLimit?: number };
     export type Response = { data: ProctoredUser[], page: number, total: number, totalPages: number };
 }

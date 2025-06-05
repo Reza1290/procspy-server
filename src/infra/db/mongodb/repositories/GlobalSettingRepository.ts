@@ -32,10 +32,11 @@ export class GlobalSettingRepository implements
     async getGlobalSettings(params: GetGlobalSettingsRepository.Request): Promise<GetGlobalSettingsRepository.Response> {
         const collection = await GlobalSettingRepository.getCollection()
         const { page, paginationLimit } = params
+        console.log(paginationLimit)
         const offset = (page - 1) * paginationLimit
         const rawGlobalSettings = await collection.find({})
             .skip(offset)
-            .limit(paginationLimit)
+            .limit(Number(paginationLimit))
             .toArray()
 
         const sessions = mapCollection(rawGlobalSettings)
@@ -45,6 +46,7 @@ export class GlobalSettingRepository implements
         return {
             data: sessions, page, total, totalPages,
         };
+
     }
 
 

@@ -9,6 +9,6 @@ export interface GetGlobalSettingsInterface extends UseCase<GetGlobalSettingsInt
 }
 
 export namespace GetGlobalSettingsInterface {
-    export type Request = { page?: number };
+    export type Request = { page?: number, paginationLimit? :number};
     export type Response = { data: GlobalSetting[], page: number, total: number, totalPages: number };
 }

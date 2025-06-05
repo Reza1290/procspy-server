@@ -10,8 +10,7 @@ export class GetProctoredUsers implements GetProctoredUsersInterface {
     ) { }
 
     async execute(body: GetProctoredUsersInterface.Request): Promise<GetProctoredUsersInterface.Response> {
-        const { page = 1 } = body
-        const { paginationLimit } = paginationConfig;
+        const { page = 1, paginationLimit = 15 } = body
 
 
         return this.getProctoredUsersRepository.getProctoredUsers({page, paginationLimit})

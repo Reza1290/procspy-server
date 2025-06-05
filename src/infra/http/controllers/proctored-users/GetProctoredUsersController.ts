@@ -18,9 +18,8 @@ export class GetProctoredUsersController extends BaseController {
     }
 
     async execute(httpRequest: GetProctoredUsersController.Request): Promise<GetProctoredUsersController.Response> {
-        const { page } = httpRequest.query!
-        console.log(page)
-        const response = await this.getProctoredUsers.execute({ page })
+        const { page, paginationLimit } = httpRequest.query!
+        const response = await this.getProctoredUsers.execute({ page, paginationLimit })
         return ok(response)
 
     }
@@ -28,6 +27,6 @@ export class GetProctoredUsersController extends BaseController {
 }
 
 export namespace GetProctoredUsersController {
-    export type Request = HttpRequest<undefined, { page?: number }>;
+    export type Request = HttpRequest<undefined, { page?: number, paginationLimit?: number }>;
     export type Response = HttpResponse<GetProctoredUsersInterface.Response>
 }
