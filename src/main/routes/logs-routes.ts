@@ -6,6 +6,7 @@ import { webrtcMiddleware } from "@main/middlewares/webrtc-middleware";
 import { makeCreateLogByTokenController } from "@main/factories/controllers/logs/create-log-by-token/controller-factory";
 import { makeGetProctoredUserDetailLogByTokenController } from "@main/factories/controllers/etc/get-proctored-user-detail-log-by-token/controller-factory";
 import { makeGetLogsByRoomIdController } from "@main/factories/controllers/logs/get-logs-by-room-id/controller-factory";
+import { makeGetLogsByTokenController } from "@main/factories/controllers/logs/get-logs-by-token/controller-factory";
 
 
 export default(router: Router): void => {
@@ -13,4 +14,5 @@ export default(router: Router): void => {
     router.post('/save-log', webrtcMiddleware, expressRouteAdapter(makeCreateLogByTokenController()))
 
     router.get('/logs-in-room/:roomId', authMiddleware, expressRouteAdapter(makeGetLogsByRoomIdController()))
+    router.get('/logs-proctored-user/:token', authMiddleware, expressRouteAdapter(makeGetLogsByTokenController()))
 }

@@ -12,7 +12,6 @@ import { SessionRepository } from "@infra/db/mongodb/repositories/SessionReposit
 export const makeGetProctoredUserDetailLogByToken = (): GetProctoredUserDetailLogByTokenInterface => {
     const sessionRepo = new SessionRepository()
     const proctoredUserRepo = new ProctoredUserRepository()
-    const logRepo = new LogRepository()
 
-    return new GetProctoredUserDetailLogByToken(sessionRepo, proctoredUserRepo, logRepo)
+    return new GetProctoredUserDetailLogByToken(sessionRepo, proctoredUserRepo)
 }

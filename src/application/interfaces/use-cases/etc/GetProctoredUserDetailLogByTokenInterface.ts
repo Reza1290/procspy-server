@@ -13,7 +13,6 @@ export interface GetProctoredUserDetailLogByTokenInterface extends UseCase<GetPr
 export namespace GetProctoredUserDetailLogByTokenInterface {
     export type Request = string;
     export type Response = { data: {
-        logs: Log[],
         session: Session,
         user: ProctoredUser
     }} | SessionNotExistError;

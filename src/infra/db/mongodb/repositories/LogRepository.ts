@@ -24,15 +24,25 @@ export class LogRepository implements
         return objectIdToString(insertedId)
     }
 
-    async getLogsBySessionId(sessionId: GetLogsBySessionIdRepository.Request): Promise<GetLogsBySessionIdRepository.Response> {
+    async getLogsBySessionId(params: GetLogsBySessionIdRepository.Request): Promise<GetLogsBySessionIdRepository.Response> {
         const collection = await LogRepository.getCollection()
+        const { sessionId, page, paginationLimit } = params
+        const offset = (page! - 1) * paginationLimit!
         const rawLogs = await collection.find({ sessionId })
-            // .sort({ timestamp: 1 })
+            .skip(offset)
+            .limit(Number(paginationLimit))
             .toArray()
 
         const logs = mapCollection(rawLogs)
+        const total = await collection.countDocuments({sessionId})
+        const totalPages = Math.ceil(total / paginationLimit)
 
-        return logs
+        return {
+            data: logs,
+            page,
+            total,
+            totalPages,
+        };
     }
 
     async getLogsByRoomId(params: GetLogsByRoomIdRepository.Request): Promise<GetLogsByRoomIdRepository.Response> {

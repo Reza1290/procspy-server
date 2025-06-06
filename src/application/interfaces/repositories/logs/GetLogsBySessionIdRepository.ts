@@ -3,10 +3,10 @@ import { RoomProps } from "../../../../domain/entities/Room"
 
 
 export interface GetLogsBySessionIdRepository{
-    getLogsBySessionId(sessionId: GetLogsBySessionIdRepository.Request): Promise<GetLogsBySessionIdRepository.Response>
+    getLogsBySessionId(params: GetLogsBySessionIdRepository.Request): Promise<GetLogsBySessionIdRepository.Response>
 }
 
 export namespace GetLogsBySessionIdRepository {
-    export type Request = string
-    export type Response = Log[]
+    export type Request = {sessionId: string, page: number, paginationLimit: number}
+    export type Response = { data: Log[], page: number, total:number, totalPages: number, }
 }
