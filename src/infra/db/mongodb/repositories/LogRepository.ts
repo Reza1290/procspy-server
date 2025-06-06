@@ -28,13 +28,36 @@ export class LogRepository implements
         const collection = await LogRepository.getCollection()
         const { sessionId, page, paginationLimit } = params
         const offset = (page! - 1) * paginationLimit!
-        const rawLogs = await collection.find({ sessionId })
-            .skip(offset)
-            .limit(Number(paginationLimit))
+        const rawLogs = await collection.aggregate([
+            {
+                $match: {
+                    "sessionId": sessionId
+                }
+            },
+            {
+                $sort: { timestamp: -1 }
+            },
+            {
+                $skip: offset
+            },
+            {
+                $limit: Number(paginationLimit)
+            },
+            {
+                $lookup: {
+                    from: "flags",
+                    localField: "flagKey",
+                    foreignField: "flagKey",
+                    as: "flag"
+                }
+            },
+            {
+                $unwind: { path: "$flag", preserveNullAndEmptyArrays: true }
+            }])
             .toArray()
 
         const logs = mapCollection(rawLogs)
-        const total = await collection.countDocuments({sessionId})
+        const total = await collection.countDocuments({ sessionId })
         const totalPages = Math.ceil(total / paginationLimit)
 
         return {
