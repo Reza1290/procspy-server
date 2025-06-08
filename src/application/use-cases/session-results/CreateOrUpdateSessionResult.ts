@@ -21,105 +21,101 @@ export class CreateOrUpdateSessionResult implements CreateOrUpdateSessionResultI
     ) { }
 
     async execute(credentials: CreateOrUpdateSessionResultInterface.Request): Promise<CreateOrUpdateSessionResultInterface.Response> {
-        try{
-        const { sessionId, flagKey, logType, prevLogType } = credentials
+        try {
+            const { sessionId, flagKey, logType, prevLogType } = credentials
 
-        const existSessionResult = await this.getSessionResultBySessionIdRepository.getSessionResultBySessionId(sessionId)
+            const existSessionResult = await this.getSessionResultBySessionIdRepository.getSessionResultBySessionId(sessionId)
 
-        const isFlagKeyExist = await this.getFlagKeyByFlagKeyRepository.getFlagByFlagKey(flagKey)
+            const isFlagKeyExist = await this.getFlagKeyByFlagKeyRepository.getFlagByFlagKey(flagKey)
 
-        if (!isFlagKeyExist) {
-            return new SessionNotExistError
-        }
-
-        if (!existSessionResult) {
-            const newIdSessionResult = await this.createSessionResultRepository.createSessionResult({
-                sessionId,
-                falseDetection: 0,
-                trueSeverity: isFlagKeyExist.severity,
-                fraudLevel: FraudLevel.LOW,
-                totalFlags: 1,
-                totalSeverity: isFlagKeyExist.severity
-            })
-
-            const res = await this.getSessionResultBySessionIdRepository.getSessionResultBySessionId(newIdSessionResult)
-
-            if (!res) {
+            if (!isFlagKeyExist) {
                 return new SessionNotExistError
             }
-            return res
-        }
 
+            if (!existSessionResult) {
+                const newIdSessionResult = await this.createSessionResultRepository.createSessionResult({
+                    sessionId,
+                    falseDetection: 0,
+                    trueSeverity: isFlagKeyExist.severity,
+                    fraudLevel: FraudLevel.LOW,
+                    totalFlags: 1,
+                    totalSeverity: isFlagKeyExist.severity
+                })
 
-        const maxSeverityVar = await this.getGlobalSettingByKeyRepository.getGlobalSettingByKey("MAX_SEVERITY")
-        let severityThreshold = 0
-        if (!maxSeverityVar) {
-            severityThreshold = 100
-        } else {
-            try {
-                severityThreshold = parseInt(maxSeverityVar.value)
-            } catch (error) {
-                console.log(error)
-                return new SessionNotExistError
-            }
-        }
+                const res = await this.getSessionResultBySessionIdRepository.getSessionResultBySessionId(newIdSessionResult)
 
-
-
-        let totalSeverity = existSessionResult.totalSeverity
-        let totalFlags = existSessionResult.totalFlags
-        let totalFalseDetection = existSessionResult.falseDetection
-        let trueSeverity = existSessionResult.trueSeverity
-
-        if (prevLogType) {
-
-            if (prevLogType === LogType.True) {
-                if (logType === LogType.False) {
-                    totalFalseDetection += 1
-                    trueSeverity -= isFlagKeyExist.severity
+                if (!res) {
+                    return new SessionNotExistError
                 }
-            } else if (prevLogType === LogType.False) {
-                if (logType === LogType.True) {
-                    totalFalseDetection -= 1
-                    trueSeverity += isFlagKeyExist.severity
+                return res
+            }
+
+
+            const maxSeverityVar = await this.getGlobalSettingByKeyRepository.getGlobalSettingByKey("MAX_SEVERITY")
+            let threshold = 120;
+            if (maxSeverityVar) {
+                const parsed = parseInt(maxSeverityVar.value);
+                if (!isNaN(parsed)) {
+                    threshold = parsed;
+                }
+            }
+
+
+
+            let totalSeverity = existSessionResult.totalSeverity
+            let totalFlags = existSessionResult.totalFlags
+            let totalFalseDetection = existSessionResult.falseDetection
+            let trueSeverity = existSessionResult.trueSeverity
+
+            if (prevLogType) {
+
+                if (prevLogType === LogType.True) {
+                    if (logType === LogType.False) {
+                        totalFalseDetection += 1
+                        trueSeverity -= isFlagKeyExist.severity
+                    }
+                } else if (prevLogType === LogType.False) {
+                    if (logType === LogType.True) {
+                        totalFalseDetection -= 1
+                        trueSeverity += isFlagKeyExist.severity
+                    }
+                } else {
+                    if (logType === LogType.False) {
+                        totalFalseDetection += 1
+                        trueSeverity -= isFlagKeyExist.severity
+                    }
                 }
             } else {
-                if (logType === LogType.False) {
-                    totalFalseDetection += 1
-                    trueSeverity -= isFlagKeyExist.severity
-                }
+                totalSeverity += isFlagKeyExist.severity
+                trueSeverity += isFlagKeyExist.severity
+                totalFlags += 1
             }
-        } else {
-            totalSeverity += isFlagKeyExist.severity
-            trueSeverity += isFlagKeyExist.severity
-            totalFlags += 1
-        }
 
 
-        const avgSeverityPercent = (trueSeverity / (Number(severityThreshold) * 100)) * 100;
+            const percentOfThreshold = (totalSeverity / threshold) * 100;
 
-        let fraudLevel =
-            avgSeverityPercent >= 75 ? FraudLevel.CRITICAL :
-                avgSeverityPercent >= 50 ? FraudLevel.HIGH :
-                    avgSeverityPercent >= 25 ? FraudLevel.MEDIUM :
-                        FraudLevel.LOW;
+            const fraudLevel =
+                percentOfThreshold >= 90 ? FraudLevel.CRITICAL :
+                    percentOfThreshold >= 65 ? FraudLevel.HIGH:
+                        percentOfThreshold >= 25 ? FraudLevel.MEDIUM :
+                            FraudLevel.LOW;
 
-        const updatedSessionResult = await this.updateSessionResultRepository.updateSessionResult({
-            id: existSessionResult.id,
-            falseDetection: totalFalseDetection,
-            fraudLevel,
-            totalFlags,
-            totalSeverity,
-            trueSeverity
-        })
+            const updatedSessionResult = await this.updateSessionResultRepository.updateSessionResult({
+                id: existSessionResult.id,
+                falseDetection: totalFalseDetection,
+                fraudLevel,
+                totalFlags,
+                totalSeverity,
+                trueSeverity
+            })
 
-        if (!updatedSessionResult) {
-            return new SessionNotExistError
-        }
-        
+            if (!updatedSessionResult) {
+                return new SessionNotExistError
+            }
 
-        return updatedSessionResult
-        }catch(e){
+
+            return updatedSessionResult
+        } catch (e) {
             console.log(e)
             return new SessionNotExistError
         }
