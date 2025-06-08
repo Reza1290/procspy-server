@@ -1,11 +1,12 @@
 import { Collection } from "mongodb";
 import dbConnection from "../helpers/db-connection";
-import { mapCollection, mapDocument, objectIdToString } from "../helpers/mapper";
+import { mapCollection, mapDocument, objectIdToString, stringToObjectId } from "../helpers/mapper";
 
 import { CreateLogRepository } from "@application/interfaces/repositories/logs/CreateLogRepository"
 import { GetLogsBySessionIdRepository } from "@application/interfaces/repositories/logs/GetLogsBySessionIdRepository";
 import { GetLogsByRoomIdRepository } from "@application/interfaces/repositories/logs/GetLogsByRoomIdRepository";
 import { EnrichedLog } from "@application/interfaces/use-cases/logs/GetLogsByRoomIdInterface";
+import { UpdateLogRepository } from "@application/interfaces/repositories/logs/UpdateLogRepository";
 
 
 
@@ -13,7 +14,8 @@ import { EnrichedLog } from "@application/interfaces/use-cases/logs/GetLogsByRoo
 export class LogRepository implements
     CreateLogRepository,
     GetLogsBySessionIdRepository,
-    GetLogsByRoomIdRepository {
+    GetLogsByRoomIdRepository,
+    UpdateLogRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('logs')
     }
@@ -155,5 +157,23 @@ export class LogRepository implements
             total,
             totalPages,
         };
+    }
+
+    async updateLog(logData: UpdateLogRepository.Request): Promise<UpdateLogRepository.Response> {
+        const collection = await LogRepository.getCollection()
+
+        const { id, ...updatedLogData } = logData
+        if (!id) {
+            return null
+        }
+
+        const objId = stringToObjectId(id)
+
+        const filter = { _id:  objId }
+
+        const result = await collection.updateOne(filter, { $set: updatedLogData })
+
+        const rawLog = await collection.findOne(filter)
+        return rawLog && mapDocument(rawLog)
     }
 }

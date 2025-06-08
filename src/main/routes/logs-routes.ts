@@ -7,6 +7,7 @@ import { makeCreateLogByTokenController } from "@main/factories/controllers/logs
 import { makeGetProctoredUserDetailLogByTokenController } from "@main/factories/controllers/etc/get-proctored-user-detail-log-by-token/controller-factory";
 import { makeGetLogsByRoomIdController } from "@main/factories/controllers/logs/get-logs-by-room-id/controller-factory";
 import { makeGetLogsByTokenController } from "@main/factories/controllers/logs/get-logs-by-token/controller-factory";
+import { makeUpdateLogByIdController } from "@main/factories/controllers/logs/update-log-by-id/controller-factory";
 
 
 export default(router: Router): void => {
@@ -15,4 +16,6 @@ export default(router: Router): void => {
 
     router.get('/logs-in-room/:roomId', authMiddleware, expressRouteAdapter(makeGetLogsByRoomIdController()))
     router.get('/logs-proctored-user/:token', authMiddleware, expressRouteAdapter(makeGetLogsByTokenController()))
+
+    router.post('/update-log-type', authMiddleware, expressRouteAdapter(makeUpdateLogByIdController()))
 }
