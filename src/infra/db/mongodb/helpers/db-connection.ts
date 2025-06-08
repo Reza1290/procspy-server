@@ -35,6 +35,7 @@ class DbConnection {
         }
         const collectionMigrations = this.getCollection('migrations')
         const collection = this.getCollection('flags');
+        const globalSettingMigration = this.getCollection('global_settings')
         const migrationKey = 'initial-flags-seed';
 
         const alreadyMigrated = await (await collectionMigrations).findOne({ key: migrationKey });
@@ -58,13 +59,36 @@ class DbConnection {
             { flagKey: "PROCTOR_STOPPED", label: "User Completed the Test", severity: 0 },
         ];
 
-        await (await collection).deleteMany({});
+        const defaultGlobalSettings = [
+            {
+                "key": "MAX_SEVERITY",
+                "value": "10"
+            },
+            {
+                "key": "PLATFORM_DOMAIN",
+                "value": "https://procspy.link"
+            },
+            {
+                "key": "PLATFORM_NAME",
+                "value": "APLIKASI SEKOLAH"
+            },
+            {
+                "key": "PLATFORM_TYPE",
+                "value": "DEFAULT"
+            },
+        ]
 
+        await (await collection).deleteMany({});
+        await (await globalSettingMigration).deleteMany({})
+
+        await (await globalSettingMigration).insertMany(defaultGlobalSettings)
         await (await collection).insertMany(flags);
+
         await (await collectionMigrations).insertOne({
             key: migrationKey,
             appliedAt: new Date(),
         });
+        
         console.log('Migration completed: Flags inserted.');
     }
 
