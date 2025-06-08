@@ -6,6 +6,7 @@ import { Validation } from "../../interfaces/Validation";
 import { BaseController } from "../BaseController";
 import { RoomAlreadyExistError } from "@application/errors/RoomAlreadyExistError";
 import { SessionNotExistError } from "@application/errors/SessionNotExistError";
+import { CreateOrUpdateSessionResultInterface } from "@application/interfaces/use-cases/session-results/CreateOrUpdateSessionResultInterface";
 
 
 
@@ -26,7 +27,7 @@ export class CreateLogController extends BaseController {
         if (idOrError instanceof SessionNotExistError) {
             return unauthorized(idOrError)
         } else {
-            return ok({ id: idOrError })
+            return ok({ id: idOrError.id })
         }
 
     }

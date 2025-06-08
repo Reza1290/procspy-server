@@ -7,6 +7,7 @@ import { GetLogsBySessionIdRepository } from "@application/interfaces/repositori
 import { GetLogsByRoomIdRepository } from "@application/interfaces/repositories/logs/GetLogsByRoomIdRepository";
 import { EnrichedLog } from "@application/interfaces/use-cases/logs/GetLogsByRoomIdInterface";
 import { UpdateLogRepository } from "@application/interfaces/repositories/logs/UpdateLogRepository";
+import { GetLogByIdRepository } from "@application/interfaces/repositories/logs/GetLogByIdRepository";
 
 
 
@@ -15,15 +16,24 @@ export class LogRepository implements
     CreateLogRepository,
     GetLogsBySessionIdRepository,
     GetLogsByRoomIdRepository,
-    UpdateLogRepository {
+    UpdateLogRepository,
+    GetLogByIdRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('logs')
+    }
+
+    async getLogById(id: GetLogByIdRepository.Request): Promise<GetLogByIdRepository.Response> {
+        const collection = await LogRepository.getCollection()
+        const _id = stringToObjectId(id)
+        const rawLogResult = await collection.findOne({ _id })
+        return rawLogResult && mapDocument(rawLogResult)
     }
 
     async createLog(logData: CreateLogRepository.Request): Promise<CreateLogRepository.Response> {
         const collection = await LogRepository.getCollection()
         const { insertedId } = await collection.insertOne({ ...logData, timestamp: new Date() })
-        return objectIdToString(insertedId)
+        const rawLogResult = await collection.findOne({ _id : insertedId })
+        return rawLogResult && mapDocument(rawLogResult)
     }
 
     async getLogsBySessionId(params: GetLogsBySessionIdRepository.Request): Promise<GetLogsBySessionIdRepository.Response> {
@@ -169,7 +179,7 @@ export class LogRepository implements
 
         const objId = stringToObjectId(id)
 
-        const filter = { _id:  objId }
+        const filter = { _id: objId }
 
         const result = await collection.updateOne(filter, { $set: updatedLogData })
 

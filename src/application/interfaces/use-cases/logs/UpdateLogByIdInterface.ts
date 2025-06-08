@@ -1,5 +1,5 @@
 import { UseCase } from "../UseCase";
-import { Log } from "@domain/entities/Log";
+import { Log, LogType } from "@domain/entities/Log";
 import { LogNotExistError } from "@application/errors/LogNotExistError";
 
 
@@ -10,6 +10,6 @@ export interface UpdateLogByIdInterface extends UseCase<UpdateLogByIdInterface.R
 }
 
 export namespace UpdateLogByIdInterface{
-    export type Request = Omit<Log, 'timestamp' | 'sessionId' | 'flagKey' | 'attachment'>
-    export type Response = Log | LogNotExistError
+    export type Request =  Omit<Log, 'timestamp' | 'sessionId' | 'flagKey' | 'attachment'>
+    export type Response = Log & {prevLogType: LogType}  | LogNotExistError
 }

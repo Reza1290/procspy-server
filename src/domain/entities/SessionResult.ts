@@ -11,9 +11,10 @@ export type SessionResultProps = {
     fraudLevel: FraudLevel
     totalFlags: number
     totalSeverity: number
-    falseDetection: boolean
+    falseDetection: number
     trueSeverity: number
-    updatedAt: string
+    updatedAt?: string
+    createdAt?: string
 }
 
 
@@ -24,7 +25,10 @@ export class SessionResult {
     public readonly totalFlags: number
     public readonly totalSeverity: number
     public readonly trueSeverity: number
-    public readonly falseDetection: boolean
+    public readonly falseDetection: number
+    public readonly updatedAt?: string
+    public readonly createdAt?: string
+    
 
     constructor(props: SessionResultProps) {
         this.id = props.id
@@ -34,5 +38,7 @@ export class SessionResult {
         this.totalSeverity = props.totalSeverity
         this.falseDetection = props.falseDetection
         this.trueSeverity = props.trueSeverity
+        this.createdAt = props.createdAt
+        this.updatedAt = props.updatedAt
     }
 }

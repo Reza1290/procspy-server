@@ -1,14 +1,14 @@
 export type GlobalSettingProps = {
     id: string
     key: string
-    value: number
+    value: string
 
 }
 
 export class GlobalSetting {
     public readonly id: string
     public readonly key: string
-    public readonly value: number
+    public readonly value: string
 
     constructor(props: GlobalSettingProps){
         this.id = props.id

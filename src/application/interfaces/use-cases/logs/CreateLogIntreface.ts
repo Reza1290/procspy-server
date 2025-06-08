@@ -13,5 +13,5 @@ export interface CreateLogInterface extends UseCase<CreateLogInterface.Request, 
 
 export namespace CreateLogInterface{
     export type Request = Omit<Log, 'id' | 'timestamp'>
-    export type Response = string | SessionNotExistError
+    export type Response = Log | SessionNotExistError
 }

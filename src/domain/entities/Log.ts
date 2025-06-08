@@ -1,4 +1,4 @@
-export enum logType {
+export enum LogType {
     System = "System",
     True = "True",
     False = "False"
@@ -8,7 +8,7 @@ export type LogProps = {
     id: string
     sessionId: string
     attachment?: string
-    logType: logType 
+    logType: LogType 
     timestamp: string
     flagKey?: string | null
 }
@@ -22,7 +22,7 @@ export class Log {
     
     public readonly attachment?: string
 
-    public readonly logType: logType
+    public readonly logType: LogType
 
     public readonly flagKey?: string | null
 

@@ -6,6 +6,7 @@ import { Validation } from "../../interfaces/Validation";
 import { BaseController } from "../BaseController";
 import { RoomAlreadyExistError } from "@application/errors/RoomAlreadyExistError";
 import { SessionNotExistError } from "@application/errors/SessionNotExistError";
+import { CreateOrUpdateSessionResultInterface } from "@application/interfaces/use-cases/session-results/CreateOrUpdateSessionResultInterface";
 
 
 
@@ -13,7 +14,9 @@ export class CreateLogByTokenController extends BaseController {
 
     constructor(
         private readonly createLogByTokenValidation: Validation,
-        private readonly createLogByToken: CreateLogByTokenInterface
+        private readonly createLogByToken: CreateLogByTokenInterface,
+        private readonly createOrUpdateSessionResult: CreateOrUpdateSessionResultInterface
+
     ) {
         super(createLogByTokenValidation)
     }
@@ -26,7 +29,8 @@ export class CreateLogByTokenController extends BaseController {
         if (idOrError instanceof SessionNotExistError) {
             return unauthorized(idOrError)
         } else {
-            return ok({ id: idOrError })
+            const updateSessionResult = await this.createOrUpdateSessionResult.execute({sessionId: idOrError.sessionId, flagKey: idOrError.flagKey!, logType: idOrError.logType})
+            return ok({ id: idOrError.id })
         }
 
     }

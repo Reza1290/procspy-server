@@ -1,7 +1,7 @@
 import { Room } from "@domain/entities/Room";
 import { UseCase } from "../UseCase";
 import { RoomAlreadyExistError } from "@application/errors/RoomAlreadyExistError";
-import { Log, logType } from "@domain/entities/Log";
+import { Log, LogType } from "@domain/entities/Log";
 import { SessionNotExistError } from "@application/errors/SessionNotExistError";
 
 
@@ -12,6 +12,6 @@ export interface CreateLogByTokenInterface extends UseCase<CreateLogByTokenInter
 }
 
 export namespace CreateLogByTokenInterface{
-    export type Request = { token: string, flagKey: string, attachment: string, logType: logType}
-    export type Response = string | SessionNotExistError
+    export type Request = { token: string, flagKey: string, attachment: string, logType: LogType}
+    export type Response = Log | SessionNotExistError
 }

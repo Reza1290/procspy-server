@@ -6,5 +6,5 @@ import { SessionRepository } from "@infra/db/mongodb/repositories/SessionReposit
 
 export const makeUpdateLogById = (): UpdateLogByIdInterface => {
     const logRepository = new LogRepository()
-    return new UpdateLogById(logRepository)
+    return new UpdateLogById(logRepository, logRepository)
 }
