@@ -1,9 +1,10 @@
 import { Collection } from "mongodb";
 import dbConnection from "../helpers/db-connection";
-import { mapCollection, mapDocument, objectIdToString } from "../helpers/mapper";
+import { mapCollection, mapDocument, objectIdToString, stringToObjectId } from "../helpers/mapper";
 import { CreateGlobalSettingRepository } from "@application/interfaces/repositories/global-settings/CreateGlobalSettingRepository";
 import { GetGlobalSettingByKeyRepository } from "@application/interfaces/repositories/global-settings/GetGlobalSettingByKeyRepository";
 import { GetGlobalSettingsRepository } from "@application/interfaces/repositories/global-settings/GetGlobalSettingsRepository";
+import { UpdateGlobalSettingRepository } from "@application/interfaces/repositories/global-settings/UpdateGlobalSettingRepository";
 
 
 
@@ -12,7 +13,8 @@ import { GetGlobalSettingsRepository } from "@application/interfaces/repositorie
 export class GlobalSettingRepository implements
     CreateGlobalSettingRepository,
     GetGlobalSettingByKeyRepository,
-    GetGlobalSettingsRepository {
+    GetGlobalSettingsRepository,
+    UpdateGlobalSettingRepository {
     static async getCollection(): Promise<Collection> {
         return dbConnection.getCollection('global_settings')
     }
@@ -47,6 +49,18 @@ export class GlobalSettingRepository implements
             data: sessions, page, total, totalPages,
         };
 
+    }
+
+    async updateGlobalSetting(data: UpdateGlobalSettingRepository.Request): Promise<UpdateGlobalSettingRepository.Response> {
+        const collection = await GlobalSettingRepository.getCollection()
+
+        const { key } = data
+
+        const filter = { key }
+        const result = await collection.updateOne(filter, { $set: data })
+
+        const rawGlobalSetting = await collection.findOne(filter)
+        return rawGlobalSetting && mapDocument(rawGlobalSetting)
     }
 
 
