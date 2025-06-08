@@ -58,19 +58,84 @@ export class SessionRepository implements
 
 
     async getSessionsByProctoredUserId(params: GetSessionsByProctoredUserIdRepository.Request): Promise<GetSessionsByProctoredUserIdRepository.Response> {
-        const collection = await SessionRepository.getCollection()
+         const collection = await SessionRepository.getCollection();
         const { proctoredUserId, page, paginationLimit } = params
-        const offset = (page - 1) * paginationLimit
-        const rawSessions = await collection.find({ proctoredUserId }).sort({ createdAt: -1 })
-            .skip(offset)
-            .limit(paginationLimit)
-            .toArray()
-        const total = await collection.countDocuments({})
-        const totalPages = Math.ceil(total / paginationLimit)
-        const sessions = mapCollection(rawSessions)
+        const limitNum = Number(paginationLimit)
+        const offset = (page - 1) * paginationLimit;
+        const pipeline = [
+            {
+                $match: {
+                    proctoredUserId,
+                },
+            },
+            {
+                $sort: { _id: -1 }
+            },
+            {
+                $skip: offset,
+            },
+            {
+                $limit: limitNum,
+            },
+
+            {
+                $addFields: {
+                    proctoredUserIdObj: { $toObjectId: "$proctoredUserId" },
+                    sessionIdStr: { $toString: "$_id" }
+                }
+            },
+            {
+                $lookup: {
+                    from: "proctored_users",
+                    localField: "proctoredUserIdObj",
+                    foreignField: "_id",
+                    as: "proctored_user"
+                }
+            },
+            {
+                $unwind: { path: "$proctored_user", preserveNullAndEmptyArrays: true }
+            },
+            {
+                $lookup: {
+                    from: "session_details",
+                    localField: "sessionIdStr",
+                    foreignField: "sessionId",
+                    as: "session_details"
+                }
+            },
+            {
+                $unwind: { path: "$session_details", preserveNullAndEmptyArrays: true }
+            },
+            {
+                $lookup: {
+                    from: "session_results",
+                    localField: "sessionIdStr",
+                    foreignField: "sessionId",
+                    as: "session_result",
+                },
+            },
+            {
+                $unwind: {
+                    path: "$session_result",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
+
+        ];
+
+        const enrichedSessions = await collection.aggregate(pipeline).toArray() as EnrichedSession[];
+        console.log(enrichedSessions)
+        const total = await collection.countDocuments({
+            proctoredUserId,
+        });
+
+        const totalPages = Math.ceil(total / paginationLimit);
 
         return {
-            data: sessions, page, total, totalPages,
+            data: enrichedSessions,
+            page,
+            total,
+            totalPages,
         };
     }
 
