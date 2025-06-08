@@ -3,11 +3,12 @@ import { UseCase } from "../UseCase";
 import { ProctoredUser } from "@domain/entities/ProctoredUser";
 import { Session } from "@domain/entities/Session";
 import { SessionDetail } from "@domain/entities/SessionDetail";
+import { SessionResult } from "@domain/entities/SessionResult";
 
 export type EnrichedSession = Session & {
   proctoredUser: ProctoredUser | null;
   session_details: SessionDetail | null;
-//   session_report: SessionReport | null;
+  session_result: SessionResult | null;
 };
 
 

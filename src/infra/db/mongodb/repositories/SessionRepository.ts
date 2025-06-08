@@ -179,21 +179,21 @@ export class SessionRepository implements
             },
             {
                 $unwind: { path: "$session_details", preserveNullAndEmptyArrays: true }
-            }
-            // {
-            //     $lookup: {
-            //         from: "SessionReport",
-            //         localField: "sessionIdStr",
-            //         foreignField: "sessionId",
-            //         as: "session_report",
-            //     },
-            // },
-            // {
-            //     $unwind: {
-            //         path: "$session_report",
-            //         preserveNullAndEmptyArrays: true,
-            //     },
-            // },
+            },
+            {
+                $lookup: {
+                    from: "session_results",
+                    localField: "sessionIdStr",
+                    foreignField: "sessionId",
+                    as: "session_result",
+                },
+            },
+            {
+                $unwind: {
+                    path: "$session_result",
+                    preserveNullAndEmptyArrays: true,
+                },
+            },
 
         ];
 
