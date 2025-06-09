@@ -2,7 +2,7 @@ import { CreateSessionResultRepository } from "@application/interfaces/repositor
 import dbConnection from "../helpers/db-connection"
 import { Collection, Timestamp } from "mongodb"
 import { UpdateSessionResultRepository } from "@application/interfaces/repositories/session-results/UpdateSessionResultRepository"
-import { GetSessionResultByIdRepository } from "@application/interfaces/repositories/session-results/GetSessionResultRepositoryBySessionId"
+import { GetSessionResultByIdRepository } from "@application/interfaces/repositories/session-results/GetSessionResultRepositoryBySessionIdRepository"
 import { mapDocument, objectIdToString, stringToObjectId } from "../helpers/mapper"
 import { GetSessionResultBySessionIdRepository } from "@application/interfaces/repositories/session-results/GetSessionResultBySessionIdRepository"
 

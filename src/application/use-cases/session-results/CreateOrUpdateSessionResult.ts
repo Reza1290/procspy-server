@@ -3,7 +3,7 @@ import { GetFlagByFlagKeyRepository } from "@application/interfaces/repositories
 import { GetGlobalSettingByKeyRepository } from "@application/interfaces/repositories/global-settings/GetGlobalSettingByKeyRepository";
 import { CreateSessionResultRepository } from "@application/interfaces/repositories/session-results/CreateSessionResultRepository";
 import { GetSessionResultBySessionIdRepository } from "@application/interfaces/repositories/session-results/GetSessionResultBySessionIdRepository";
-import { GetSessionResultByIdRepository } from "@application/interfaces/repositories/session-results/GetSessionResultRepositoryBySessionId";
+import { GetSessionResultByIdRepository } from "@application/interfaces/repositories/session-results/GetSessionResultRepositoryBySessionIdRepository";
 import { UpdateSessionResultRepository } from "@application/interfaces/repositories/session-results/UpdateSessionResultRepository";
 import { GetSessionByIdRepository } from "@application/interfaces/repositories/sessions/GetSessionByIdRepository";
 import { CreateOrUpdateSessionResultInterface } from "@application/interfaces/use-cases/session-results/CreateOrUpdateSessionResultInterface";

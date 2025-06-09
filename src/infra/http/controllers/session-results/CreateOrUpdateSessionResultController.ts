@@ -1,4 +1,4 @@
-import { GetSessionResultByIdRepository } from "@application/interfaces/repositories/session-results/GetSessionResultRepositoryBySessionId";
+import { GetSessionResultByIdRepository } from "@application/interfaces/repositories/session-results/GetSessionResultRepositoryBySessionIdRepository";
 import { ok, unauthorized } from "../../helpers/http";
 import { HttpRequest } from "../../interfaces/HttpRequest";
 import { HttpResponse } from "../../interfaces/HttpResponse";
