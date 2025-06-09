@@ -67,8 +67,8 @@ export class ProctoredUserRepository implements
 
         const result = await collection.updateOne(filter, { $set: data })
 
-        const rawSession = await collection.findOne(filter)
+        const raw = await collection.findOne(filter)
 
-        return rawSession && mapDocument(rawSession)
+        return raw && mapDocument(raw)
     }
 }

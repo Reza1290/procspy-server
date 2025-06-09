@@ -3,6 +3,8 @@ export type RoomProps = {
     title?: string
     roomId: string
     createdAt: string
+    updatedAt?: string
+    deletedAt?: string
 }
 
 export class Room {
