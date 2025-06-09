@@ -9,6 +9,6 @@ export interface GetRoomsInterface extends UseCase<GetRoomsInterface.Request, Ge
 }
 
 export namespace GetRoomsInterface{
-    export type Request = { page?: number };
+    export type Request = { page?: number, paginationLimit?: number };
   export type Response = { data: Room[], page: number, total: number, totalPages: number };
 }

@@ -40,17 +40,18 @@ export class RoomRepository implements
     async getRooms(params: GetRoomsRepository.Request): Promise<GetRoomsRepository.Response> {
         const collection = await RoomRepository.getCollection()
         const { page, paginationLimit } = params
-        const offset = (page - 1) * paginationLimit
+        const limitNum = Number(paginationLimit)
+        const offset = (page - 1) * limitNum
         const rawRooms = await collection.find({ deletedAt: null })
             .sort({ createdAt: -1 })
             .skip(offset)
-            .limit(paginationLimit)
+            .limit(limitNum)
             .toArray()
 
         const rooms = mapCollection(rawRooms)
 
-        const total = await collection.countDocuments({})
-        const totalPages = Math.ceil(total / paginationLimit)
+        const total = await collection.countDocuments({ deletedAt: null})
+        const totalPages = Math.ceil(total / limitNum)
         return {
             data: rooms, page, total, totalPages,
         };

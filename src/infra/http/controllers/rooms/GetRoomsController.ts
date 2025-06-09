@@ -18,8 +18,8 @@ export class GetRoomsController extends BaseController {
     }
 
     async execute(httpRequest: GetRoomsController.Request): Promise<GetRoomsController.Response> {
-        const { page } = httpRequest.params!
-        const response = await this.getRooms.execute({ page })
+        const { page, paginationLimit } = httpRequest.query!
+        const response = await this.getRooms.execute({ page, paginationLimit })
         return ok(response)
 
     }

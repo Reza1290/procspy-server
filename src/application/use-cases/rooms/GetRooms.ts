@@ -9,9 +9,7 @@ export class GetRooms implements GetRoomsInterface {
     ) { }
 
     async execute(body: GetRoomsInterface.Request): Promise<GetRoomsInterface.Response> {
-        const { page = 1 } = body
-        const { paginationLimit } = paginationConfig;
-
+        const { page = 1, paginationLimit = paginationConfig.paginationLimit } = body
 
         return this.getRoomsRepository.getRooms({page, paginationLimit})
     }
