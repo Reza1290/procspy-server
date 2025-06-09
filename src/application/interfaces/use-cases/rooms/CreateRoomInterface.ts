@@ -10,6 +10,6 @@ export interface CreateRoomInterface extends UseCase<CreateRoomInterface.Request
 }
 
 export namespace CreateRoomInterface{
-    export type Request = Omit<Room, 'id' | 'title' | 'createdAt'>
+    export type Request = Omit<Room, 'id' | 'createdAt'>
     export type Response = string | RoomAlreadyExistError
 }

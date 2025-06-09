@@ -18,8 +18,8 @@ export class CreateRoomController extends BaseController {
     }
 
     async execute(httpRequest: CreateRoomController.Request): Promise<CreateRoomController.Response> {
-        const { roomId} = httpRequest.body!
-        const idOrError = await this.createRoom.execute({ roomId })
+        const { roomId, title} = httpRequest.body!
+        const idOrError = await this.createRoom.execute({ roomId, title })
         if (idOrError instanceof RoomAlreadyExistError) {
             return unauthorized(idOrError)
         } else {

@@ -12,7 +12,7 @@ export class CreateRoom implements CreateRoomInterface {
     ) { }
 
     async execute(body: CreateRoomInterface.Request): Promise<CreateRoomInterface.Response> {
-        const { roomId } = body
+        const { roomId,  title} = body
 
         const room = await this.getRoomByRoomIdRepository.getRoomByRoomId(roomId)
 
@@ -22,6 +22,7 @@ export class CreateRoom implements CreateRoomInterface {
         
         const newRoom = await this.createRoomRepository.createRoom({
             roomId: roomId,
+            title: title ?? "No Name"
         })
         
         return newRoom
