@@ -31,7 +31,8 @@ export class SignUp implements SignUpInterface {
             email: email,
             password: passwordHash,
             username: username,
-            name: name
+            name: name,
+            active: false,
         })
 
         return newUserId

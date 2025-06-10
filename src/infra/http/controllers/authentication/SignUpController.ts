@@ -15,7 +15,6 @@ export class SignUpController extends BaseController{
     constructor(
         private readonly signUpValidation: Validation,
         private readonly signUp: SignUpInterface,
-        private readonly signIn: SignInInterface,
         
     ){
         super(signUpValidation)
@@ -29,13 +28,9 @@ export class SignUpController extends BaseController{
             return forbidden(idOrError)
         }
 
-        const authenticationTokenOrError = await this.signIn.execute({email, password})
-        if(authenticationTokenOrError instanceof Error){
-            throw authenticationTokenOrError
-        }
 
         return ok({
-            authenticationToken: authenticationTokenOrError
+           id: idOrError
         })
         
 
@@ -45,6 +40,6 @@ export class SignUpController extends BaseController{
 
 export namespace SignUpController {
     export type Request = HttpRequest<SignUpInterface.Request>
-    export type Response = HttpResponse<{authenticationToken:string} | EmailInUseError>
+    export type Response = HttpResponse<{id:string} | EmailInUseError>
 
 }

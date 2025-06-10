@@ -20,6 +20,11 @@ export class SignIn implements SignInInterface {
         if (!user) {
             return new UnauthorizedError()
         }
+
+        if(user.active === false){
+            return new UnauthorizedError()
+        }
+        
         const isPasswordValid = await this.hashComparer.compare(password, user.password)
 
         if (!isPasswordValid) {

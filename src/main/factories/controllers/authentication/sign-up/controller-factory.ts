@@ -8,6 +8,5 @@ import { makeSignUp } from "@main/factories/use-cases/authentication/sign-up-fac
 export const makeSignUpController = (): BaseController => {
     const validation = makeSignUpValidation()
     const useCase = makeSignUp()
-    const useCaseSignIn = makeSignIn()
-    return new SignUpController(validation, useCase, useCaseSignIn)
+    return new SignUpController(validation, useCase)
 }
