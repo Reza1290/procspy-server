@@ -7,6 +7,7 @@ import { BaseController } from "../BaseController";
 import { RoomAlreadyExistError } from "@application/errors/RoomAlreadyExistError";
 import { SessionNotExistError } from "@application/errors/SessionNotExistError";
 import { SessionLockedError } from "@application/errors/SesionLockedError";
+import { SessionStatusError } from "@application/errors/SessionStatusError";
 
 
 
@@ -24,7 +25,7 @@ export class UpdateSessionStatusController extends BaseController {
         
         const response = await this.updateSessionStatus.execute({token, status})
         
-        if(response instanceof SessionNotExistError || response instanceof SessionLockedError){
+        if(response instanceof SessionNotExistError || response instanceof SessionStatusError || response instanceof SessionLockedError){
             return notFound(response)
         }
 
