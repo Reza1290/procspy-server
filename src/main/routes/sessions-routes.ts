@@ -13,6 +13,7 @@ export default(router: Router): void => {
     router.post('/session', authMiddleware, expressRouteAdapter(makeCreateSessionController()))
     router.get('/sessions/:proctoredUserId', authMiddleware, expressRouteAdapter(makeGetSessionsByProctoredUserIdController()))
     router.get('/session/update-status/:token/:status', webrtcMiddleware, expressRouteAdapter(makeUpdateSessionStatusController()))
+    router.get('/session/update-status-proctor/:token/:status', authMiddleware, expressRouteAdapter(makeUpdateSessionStatusController()))
     router.patch('/session', authMiddleware, expressRouteAdapter(makeUpdateSessionController()))
 
     router.get('/sessions-in-room/:roomId', authMiddleware, expressRouteAdapter(makeGetSessionsByRoomIdController()))

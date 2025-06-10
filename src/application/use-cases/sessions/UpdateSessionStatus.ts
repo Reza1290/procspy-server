@@ -26,8 +26,12 @@ export class UpdateSessionStatus implements UpdateSessionStatusInterface {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, startTime: (new Date()).toISOString() })
         } else if (status == SessionStatus.Paused && session.status != SessionStatus.Completed) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status })
-        } else if (status == SessionStatus.Completed) {
+        } else if (status == SessionStatus.Completed){
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, endTime: (new Date()).toISOString() })
+        }else if (status == SessionStatus.Aborted){
+            updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, endTime: (new Date()).toISOString()})
+        }else if (status == SessionStatus.Canceled){
+            updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status })
         }else{
             return new SessionLockedError()
         }
