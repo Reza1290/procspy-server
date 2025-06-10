@@ -24,14 +24,14 @@ export class UpdateSessionStatus implements UpdateSessionStatusInterface {
         let updatedSession = null
 
         if (status == SessionStatus.Ongoing && session.status != SessionStatus.Completed && session.status != SessionStatus.Canceled && session.status != SessionStatus.Aborted) {
-            updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, startTime: (new Date()).toISOString() })
+            updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, startTime: session?.startTime ?  session.startTime : (new Date()).toISOString()})
         } else if (status == SessionStatus.Paused && session.status != SessionStatus.Completed && session.status != SessionStatus.Canceled && session.status != SessionStatus.Aborted) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status })
-        } else if (status == SessionStatus.Completed && session.status != SessionStatus.Canceled && session.status != SessionStatus.Aborted && session.status != SessionStatus.Scheduled) {
+        } else if (status == SessionStatus.Completed && (session.status == SessionStatus.Ongoing || session.status == SessionStatus.Paused)) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, endTime: (new Date()).toISOString() })
-        } else if (status == SessionStatus.Aborted && session.status != SessionStatus.Completed && session.status != SessionStatus.Canceled && session.status != SessionStatus.Scheduled) {
+        } else if (status == SessionStatus.Aborted && (session.status == SessionStatus.Ongoing || session.status == SessionStatus.Paused)) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status, endTime: (new Date()).toISOString() })
-        } else if (status == SessionStatus.Canceled && session.status != SessionStatus.Aborted && session.status != SessionStatus.Completed) {
+        } else if (status == SessionStatus.Canceled && session.status == SessionStatus.Scheduled ) {
             updatedSession = await this.updateSessionStatusRepository.updateSessionStatus({ token, status })
         } else {
             return new SessionStatusError()
