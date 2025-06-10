@@ -1,9 +1,12 @@
+import { SessionLockedError } from "@application/errors/SesionLockedError"
+import { SessionEndedError } from "@application/errors/SessionEndedError"
 import { SessionNotExistError } from "@application/errors/SessionNotExistError"
 import { GetGlobalSettingByKeyRepository } from "@application/interfaces/repositories/global-settings/GetGlobalSettingByKeyRepository"
 import { GetProctoredUserByIdRepository } from "@application/interfaces/repositories/proctored-users/GetProctoredUserByIdRepository"
 import { GetSessionByTokenRepository } from "@application/interfaces/repositories/sessions/GetSessionByTokenRepository"
 import { SignInProctoredUserInterface } from "@application/interfaces/use-cases/authentication/SignInProctoredUserInterface"
 import { GlobalSetting } from "@domain/entities/GlobalSetting"
+import { SessionStatus } from "@domain/entities/Session"
 
 
 export class SignInProctoredUser implements SignInProctoredUserInterface {
@@ -20,6 +23,10 @@ export class SignInProctoredUser implements SignInProctoredUserInterface {
         const session = await this.getSessionByTokenRepository.getSessionByToken(token)
         if (!session) {
             return new SessionNotExistError()
+        }
+
+        if(session.status && [SessionStatus.Aborted, SessionStatus.Completed, SessionStatus.Canceled].includes(session.status)){
+            return new SessionEndedError(session.status)
         }
 
         const user = await this.getProctoredUserByIdRepository.getProctoredUserById(session.proctoredUserId)

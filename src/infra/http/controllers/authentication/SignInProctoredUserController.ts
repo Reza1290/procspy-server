@@ -8,6 +8,7 @@ import { Validation } from "../../interfaces/Validation";
 import { BaseController } from "../BaseController";
 import { ProctoredUser } from "@domain/entities/ProctoredUser";
 import { Session } from "@domain/entities/Session";
+import { SessionEndedError } from "@application/errors/SessionEndedError";
 
 
 
@@ -23,7 +24,7 @@ export class SignInProctoredUserController extends BaseController {
     async execute(httpRequest: SignInProctoredUserController.Request): Promise<SignInProctoredUserController.Response> {
         const { token } = httpRequest.params!
         const sessionDataOrError = await this.signIn.execute({ token })
-        if (sessionDataOrError instanceof SessionNotExistError) {
+        if (sessionDataOrError instanceof SessionNotExistError || sessionDataOrError instanceof SessionEndedError) {
             return unauthorized(sessionDataOrError)
         } else {
             return ok({...sessionDataOrError})
@@ -35,5 +36,5 @@ export class SignInProctoredUserController extends BaseController {
 
 export namespace SignInProctoredUserController {
     export type Request = HttpRequest<SignInProctoredUserInterface.Request>
-    export type Response = HttpResponse<{ session: Omit<Session , 'id'>, user: Omit<ProctoredUser, 'id'>} | SessionNotExistError>
+    export type Response = HttpResponse<{ session: Omit<Session , 'id'>, user: Omit<ProctoredUser, 'id'>} | SessionNotExistError | SessionEndedError>
 }
