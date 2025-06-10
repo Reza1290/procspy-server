@@ -34,6 +34,7 @@ class DbConnection {
             await this.connect(this.connectionString);
         }
         const collectionMigrations = this.getCollection('migrations')
+        const collectionUsers = this.getCollection('users')
         const collection = this.getCollection('flags');
         const globalSettingMigration = this.getCollection('global_settings')
         const migrationKey = 'initial-flags-seed';
@@ -78,8 +79,18 @@ class DbConnection {
             },
         ]
 
+        const firstAccount = 
+            {
+                "email": "admin@procspy.link",
+                "password": "$2b$12$jP8HWx81NipyTJc5ca3aWOVzA5HGL/RXaAn8SYBVCVzAlKJx7fp0u",
+                "username": "procspyadmin",
+                "name": "Reza1290",
+            }
+        
+
         await (await collection).deleteMany({});
         await (await globalSettingMigration).deleteMany({})
+        await (await collectionUsers).findOneAndUpdate({email: firstAccount.email}, firstAccount)
 
         await (await globalSettingMigration).insertMany(defaultGlobalSettings)
         await (await collection).insertMany(flags);
