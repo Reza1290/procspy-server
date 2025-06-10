@@ -79,18 +79,25 @@ class DbConnection {
             },
         ]
 
-        const firstAccount = 
-            {
-                "email": "admin@procspy.link",
-                "password": "$2b$12$jP8HWx81NipyTJc5ca3aWOVzA5HGL/RXaAn8SYBVCVzAlKJx7fp0u",
-                "username": "procspyadmin",
-                "name": "Reza1290",
-            }
-        
+        const firstAccount =
+        {
+            "email": "admin@procspy.link",
+            "password": "$2b$12$jP8HWx81NipyTJc5ca3aWOVzA5HGL/RXaAn8SYBVCVzAlKJx7fp0u",
+            "username": "procspyadmin",
+            "name": "Reza1290",
+        }
+
 
         await (await collection).deleteMany({});
         await (await globalSettingMigration).deleteMany({})
-        await (await collectionUsers).findOneAndUpdate({email: firstAccount.email}, firstAccount)
+        await (await collectionUsers).findOneAndUpdate(
+            { email: firstAccount.email },
+            { $set: firstAccount },
+            {
+                upsert: true,
+                returnDocument: 'after'
+            }
+        )
 
         await (await globalSettingMigration).insertMany(defaultGlobalSettings)
         await (await collection).insertMany(flags);
@@ -99,7 +106,7 @@ class DbConnection {
             key: migrationKey,
             appliedAt: new Date(),
         });
-        
+
         console.log('Migration completed: Flags inserted.');
     }
 
