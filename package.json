@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
+    "start" : "node dist/server.js",
     "build": "rimraf dist && cpx \"src/public/**/*\" dist/public && tsc -p tsconfig-build.json ",
     "build:watch": "npm run build -- --watch",
     "dev": "nodemon -L --watch ./dist ./dist/main/server.js"
