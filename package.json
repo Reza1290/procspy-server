@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "start" : "node dist/server.js",
+    "start": "node dist/server.js",
     "build": "rimraf dist && cpx \"src/public/**/*\" dist/public && tsc -p tsconfig-build.json ",
     "build:watch": "npm run build -- --watch",
     "dev": "nodemon -L --watch ./dist ./dist/main/server.js"
@@ -26,7 +26,6 @@
     "rimraf": "^6.0.1"
   },
   "dependencies": {
-    "@httptoolkit/httpolyglot": "^2.2.2",
     "bcrypt": "^5.1.1",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
