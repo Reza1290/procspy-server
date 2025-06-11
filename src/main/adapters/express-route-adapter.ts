@@ -23,7 +23,8 @@ export const expressRouteAdapter = (
             res.cookie('access_token', httpResponse.body?.authenticationToken,{
                 httpOnly: true,
                 secure: true,
-                sameSite: "none"
+                sameSite: "none",
+                domain: '.procspy.link'
             })
         }
         res.status(httpResponse.statusCode).json(httpResponse.body)

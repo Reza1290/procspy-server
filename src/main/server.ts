@@ -19,8 +19,8 @@ dbConnection.connect(env.mongodbUrl)
 
     if (process.env.NODE_ENV === 'development') {
       const httpsOptions = {
-        key: fs.readFileSync(path.resolve(__dirname, '../../../certs/key.pem')),
-        cert: fs.readFileSync(path.resolve(__dirname, '../../../certs/cert.pem')),
+        key: fs.readFileSync(path.resolve(__dirname, '../../certs/key.pem')),
+        cert: fs.readFileSync(path.resolve(__dirname, '../../certs/cert.pem')),
       };
 
       https.createServer(httpsOptions, app).listen(env.port, () => {
