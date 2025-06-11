@@ -12,6 +12,8 @@ export const expressMiddlewareAdapter = (
         headers: req.headers
     }
 
+    console.log("webRtc Request", httpRequest)
+
     const httpResponse = await middleware.handle(httpRequest)
     if (httpResponse.statusCode === 200) {
         Object.assign(req, httpRequest.body)
