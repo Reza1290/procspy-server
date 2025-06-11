@@ -6,6 +6,8 @@ import env from './config/env';
 import setupApp from './config/app';
 import { ok } from 'assert';
 import path from 'path';
+import 'dotenv/config'
+
 
 dbConnection.connect(env.mongodbUrl)
   .then(async () => {
