@@ -1,7 +1,7 @@
 import env from "@main/config/env";
 import { NextFunction, Request, Response } from "express";
 
-export default function corsMiddleware(req: Request, res: Response, next: NextFunction) {
+export default function corsMiddleware(req: Request, res: Response, next: NextFunction):void {
 
   const allowedOrigins = [
     ...env.allowedOrigins,
@@ -17,7 +17,8 @@ export default function corsMiddleware(req: Request, res: Response, next: NextFu
   res.header('Access-Control-Allow-Credentials', 'true');
 
   if (req.method === 'OPTIONS') {
-    res.sendStatus(200); 
+    res.sendStatus(200);
+    return; 
   }
 
   next();

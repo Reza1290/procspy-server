@@ -85,6 +85,7 @@ class DbConnection {
             "password": "$2b$12$jP8HWx81NipyTJc5ca3aWOVzA5HGL/RXaAn8SYBVCVzAlKJx7fp0u",
             "username": "procspyadmin",
             "name": "Reza1290",
+            "active" : true
         }
 
 
