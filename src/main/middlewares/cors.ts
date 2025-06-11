@@ -1,11 +1,10 @@
+import env from "@main/config/env";
 import { NextFunction, Request, Response } from "express";
 
 export default function corsMiddleware(req: Request, res: Response, next: NextFunction) {
 
   const allowedOrigins = [
-    'https://192.168.2.5',
-    'https://localhost',
-    'https://192.168.2.5:800',
+    ...env.allowedOrigins,
     'null', // Chrome extension
   ];
   const origin = req.headers.origin!;

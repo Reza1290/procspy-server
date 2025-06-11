@@ -6,4 +6,7 @@ export default {
     bcryptSalt: 12,
     jwtSecret: process.env.JWT_SECRET || 'secretbanget',
     webrtcSecret: process.env.WEBRTC_SECRET || 'SECRET',
+    allowedOrigins: process.env.ALLOWED_ORIGINS
+        ? process.env.ALLOWED_ORIGINS.split(',').map(origin => origin.trim())
+        : [],
 }
