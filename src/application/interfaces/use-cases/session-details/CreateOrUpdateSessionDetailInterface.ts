@@ -15,5 +15,5 @@ export namespace CreateOrUpdateSessionDetailInterface {
         token: string
         
     } & Omit<SessionDetail, 'id' | 'startTime' | 'updatedAt' | 'createdAt'>
-    export type Response = SessionDetail | SessionLockedError | SessionNotExistError
+    export type Response = {prevIp: string } &SessionDetail | SessionLockedError | SessionNotExistError
 }

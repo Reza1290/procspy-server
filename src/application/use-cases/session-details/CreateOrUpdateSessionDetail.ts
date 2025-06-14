@@ -20,26 +20,29 @@ export class CreateOrUpdateSessionDetail implements CreateOrUpdateSessionDetailI
         const { token, ...newCredentials } = credentials
         const session = await this.getSessionByTokenRepository.getSessionByToken(token)
 
-        console.log("PENTING ",credentials)
+        console.log("PENTING ", credentials)
 
         if (!session) {
             return new SessionNotExistError()
         }
-        
+
         const sessionId = session.id
         console.log(session)
 
-        if(session.status === SessionStatus.Completed){
+        if (session.status === SessionStatus.Completed) {
             return new SessionLockedError()
         }
         const sessionDetail = await this.getSessionDetailBySessionIdRepository.getSessionDetailBySessionId(sessionId)
         console.log(sessionDetail)
-        if(sessionDetail && (sessionDetail?.deviceId != newCredentials.deviceId || sessionDetail.userAgent != newCredentials.userAgent)){
+        if (sessionDetail && (sessionDetail?.deviceId != newCredentials.deviceId || sessionDetail.userAgent != newCredentials.userAgent)) {
             return new SessionLockedError()
         }
 
-        const updatedSessionDetail = await this.createOrUpdateSessionDetailRepository.createOrUpdateSessionDetail({...newCredentials, sessionId})
+        const updatedSessionDetail = await this.createOrUpdateSessionDetailRepository.createOrUpdateSessionDetail({ ...newCredentials, sessionId })
 
-        return updatedSessionDetail
+        return {
+            prevIp: sessionDetail?.ipAddress || "",
+            ...updatedSessionDetail
+        }
     }
 }
