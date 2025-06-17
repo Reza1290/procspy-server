@@ -266,7 +266,7 @@ export class SessionRepository implements
         console.log(enrichedSessions)
         const total = await collection.countDocuments({
             roomId,
-            status: { $in: [0, 1, 2] },
+            status: { $in: ["ongoing", "scheduled", "paused"] },
         });
 
         const totalPages = Math.ceil(total / paginationLimit);
